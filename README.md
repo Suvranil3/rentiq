@@ -1,6 +1,6 @@
 # RentIQ — AI-Powered Rental Management & Operations Platform
 
-RentIQ is a complete rental management platform featuring a warm editorial visual design (inspired by MindMarket), modern SaaS dashboard capabilities, real-time date availability checking, security deposit escrow tracking, return inspection workflows, and AI operational analytics.
+RentIQ is a complete operations platform and rental marketplace featuring a warm visual design, modern SaaS dashboard capabilities, real-time date availability checking, security deposit escrow tracking, return inspection workflows, and AI operational analytics.
 
 ---
 
@@ -18,54 +18,78 @@ rentiq/
 │   └── WORKFLOW.md            # Operational & Customer Journey Flows
 │
 ├── frontend/                  # React + Vite + Tailwind CSS v4 Frontend
-│   ├── public/
 │   ├── src/
 │   │   ├── components/        # Reusable UI & Layout Components
 │   │   ├── context/           # Auth, Cart, & Toast Context Providers
 │   │   ├── pages/             # Public, Auth, Customer, & Admin Views
-│   │   ├── services/          # Isolated API Services & Mock Data Engine
-│   │   ├── utils/             # Formatters & Helper Utilities
-│   │   ├── App.jsx            # Application Router & Routes
-│   │   └── main.jsx           # Entry Point
+│   │   └── services/          # API Services communicating with Backend
 │   ├── package.json
 │   └── vite.config.js
 │
-├── backend/                   # [Placeholder] Node.js + Express Backend
-├── database/                  # [Placeholder] MongoDB / Mongoose Scripts
-└── ai/                        # [Placeholder] Python ML / FastAPI Microservices
+└── backend/                   # Node.js + Express API Backend
+    ├── config/                # Database connection configuration
+    ├── models/                # Mongoose Schema Definitions (User, Product, Rental, Payment)
+    ├── routes/                # REST endpoints
+    └── scripts/               # Seed script for MongoDB Atlas
 ```
-
----
-
-## 🚀 Quick Start (Frontend)
-
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Launch the development server:
-   ```bash
-   npm run dev
-   ```
-
-4. Build for production:
-   ```bash
-   npm run build
-   ```
 
 ---
 
 ## ⚡ Tech Stack
 
-- **Frontend**: React 18, Vite, JavaScript/JSX
-- **Styling**: Tailwind CSS v4 (`@tailwindcss/vite`, `@theme`)
-- **Routing**: React Router DOM v6
-- **HTTP Client**: Axios
-- **Data Visualization**: Recharts
-- **Icons**: Lucide React
+*   **Frontend**: React 18, Vite, Tailwind CSS v4, React Router DOM v6, Recharts, Lucide Icons, Axios.
+*   **Backend**: Node.js, Express, Mongoose (MongoDB ORM), JWT (Authentication), bcryptjs (Password Hashing).
+*   **Database**: MongoDB Atlas (Cloud Database).
+
+---
+
+## 🚀 Quick Start
+
+### 1. Database & Backend Configuration
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Install backend dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file in the `backend/` directory:
+   ```text
+   PORT=5000
+   MONGO_URI=your_mongodb_atlas_connection_string
+   JWT_SECRET=your_jwt_secret_key
+   ```
+4. Seed the database with sample inventory and user records:
+   ```bash
+   npm run seed
+   ```
+5. Start the backend development server:
+   ```bash
+   npm run dev
+   ```
+
+### 2. Frontend Configuration
+1. Navigate to the frontend directory:
+   ```bash
+   cd ../frontend
+   ```
+2. Install frontend dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the Vite local server:
+   ```bash
+   npm run dev
+   ```
+
+Open your browser at **[http://localhost:3000](http://localhost:3000)**.
+
+---
+
+## 🔑 Seeded Demo Credentials
+
+| User Role | Email | Password |
+| :--- | :--- | :--- |
+| **Operations Admin** | `admin@rentiq.com` | `admin123` |
+| **Demo Customer** | `alex@example.com` | `customer123` |
