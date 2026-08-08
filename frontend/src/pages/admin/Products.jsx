@@ -150,10 +150,12 @@ export const AdminProducts = () => {
               options={[
                 { label: 'All Categories', value: 'All' },
                 { label: 'Cameras', value: 'Cameras' },
+                { label: 'Lenses', value: 'Lenses' },
                 { label: 'Drones', value: 'Drones' },
                 { label: 'Audio', value: 'Audio' },
                 { label: 'Lighting', value: 'Lighting' },
-                { label: 'Mobility', value: 'Mobility' }
+                { label: 'Stabilizers', value: 'Stabilizers' },
+                { label: 'Production', value: 'Production' }
               ]}
               className="rounded-full"
             />

@@ -25,8 +25,8 @@ export const Products = () => {
     sortBy: 'recommended'
   });
 
-  const categories = ['Cameras', 'Drones', 'Audio', 'Lighting', 'Mobility'];
-  const brands = ['Canon', 'Sony', 'DJI', 'Sennheiser', 'Aputure', 'Super73'];
+  const categories = ['Cameras', 'Lenses', 'Drones', 'Audio', 'Lighting', 'Stabilizers', 'Production'];
+  const brands = ['Sony', 'Canon', 'ARRI', 'RED', 'Blackmagic', 'DJI', 'Sennheiser', 'Aputure', 'Nikon', 'Panasonic', 'Fujifilm', 'Leica', 'Shure', 'Rode', 'Sound Devices', 'Astera', 'Nanlite', 'Apple'];
 
   useEffect(() => {
     const fetchProducts = async () => {
