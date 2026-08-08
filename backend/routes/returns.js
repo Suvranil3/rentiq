@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const mongoose = require('mongoose');
 const Rental = require('../models/Rental');
 const Product = require('../models/Product');
 const Payment = require('../models/Payment');
@@ -10,7 +11,9 @@ router.post('/process', protect, requireAdmin, async (req, res, next) => {
   try {
     const { rentalId, inspectionData } = req.body;
 
-    const rental = await Rental.findById(rentalId);
+    const isObjId = mongoose.Types.ObjectId.isValid(rentalId);
+    const query = isObjId ? { $or: [{ _id: rentalId }, { rentalId }] } : { rentalId };
+    const rental = await Rental.findOne(query);
     if (!rental) return res.status(404).json({ message: 'Rental not found' });
     if (rental.status === 'Returned') {
       return res.status(400).json({ message: 'Rental already returned' });

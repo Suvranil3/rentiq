@@ -96,13 +96,15 @@ export const RentalConfirmation = () => {
             </div>
 
             <div className="p-4 bg-sandstone/30 rounded-2xl border border-hairline-mist space-y-1">
-              <span className="text-stone-gray font-semibold block uppercase">Fulfillment</span>
-              <span className="font-bold text-ink-black text-sm block">{rental.deliveryMethod}</span>
+              <span className="text-stone-gray font-semibold block uppercase">Payment Method</span>
+              <span className="font-bold text-ink-black text-sm block">{rental.paymentMethod || 'Online Payment'}</span>
             </div>
 
             <div className="p-4 bg-sandstone/30 rounded-2xl border border-hairline-mist space-y-1">
               <span className="text-stone-gray font-semibold block uppercase">Security Deposit</span>
-              <span className="font-bold text-fresh-grass text-sm block">₹{(rental.securityDeposit || 0).toLocaleString()} (Held)</span>
+              <span className="font-bold text-fresh-grass text-sm block">
+                ₹{(rental.securityDeposit || 0).toLocaleString()} ({rental.depositStatus || 'HELD'})
+              </span>
             </div>
           </div>
 

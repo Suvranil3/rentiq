@@ -3,7 +3,7 @@
 ## 1. Problem Statement & Scope
 RentIQ is an operations platform and rental marketplace serving two distinct personas:
 1. **Customer**: Searches inventory, selects rental periods, checks real-time availability, places orders with security deposit, selects delivery mode (Shipping vs Store Pickup), tracks active rentals, views invoices, and initiates returns.
-2. **Operations Admin**: Manages catalog inventory, tracks active/overdue rentals, conducts return inspections (condition, damage, missing accessories), handles security deposit holds & refunds, collects late fees, manages user accounts, and analyzes AI demand forecasting & maintenance risks.
+2. **Operations Admin**: Manages catalog inventory, tracks active/overdue rentals, conducts return inspections (condition, damage, missing accessories), handles security deposit holds & refunds, collects late fees, manages user accounts, and reviews operational reports & maintenance records.
 
 ---
 
@@ -67,6 +67,3 @@ Rental Complete & Inventory Stock Restored
 - Total Deposits currently held
 - Late Fees collected
 
-### AI Intelligence Requirements
-- **Demand Forecasting**: Product-level predicted demand vs available stock, risk rating (`HIGH`, `MEDIUM`, `LOW`), restocking recommendations.
-- **Predictive Maintenance**: Product usage cycle counter, past damage logs, maintenance risk percentage, inspection recommendations before re-renting.

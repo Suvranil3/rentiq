@@ -12,7 +12,6 @@ import {
   Calendar, 
   ShieldCheck, 
   RotateCcw, 
-  Sparkles, 
   CheckCircle2, 
   Camera, 
   Radio, 
@@ -58,8 +57,8 @@ export const Home = () => {
       <section className="pt-12 pb-20 px-6 md:px-12 max-w-7xl mx-auto w-full">
         <div className="text-center space-y-6 max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-pure-white border border-hairline-mist card-shadow text-xs font-semibold text-ink-black">
-            <Sparkles className="w-4 h-4 text-fresh-grass" />
-            <span>AI-Powered Rental & Operations Management</span>
+            <ShieldCheck className="w-4 h-4 text-fresh-grass" />
+            <span>Smart Rental & Operations Management</span>
           </div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-ink-black tracking-tight leading-[0.95] uppercase">
@@ -210,46 +209,7 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* AI Preview Section */}
-      <section className="py-12 px-6 md:px-12 max-w-7xl mx-auto w-full">
-        <div className="bg-sandstone/30 border border-hairline-mist rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="space-y-4 max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pure-white text-xs font-bold text-sky-pop border border-hairline-mist">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>AI Operations Engine</span>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-black text-ink-black">
-              Smart Demand Forecasting & Fleet Health
-            </h2>
-            <p className="text-sm text-stone-gray leading-relaxed">
-              RentIQ AI predicts equipment demand peaks, flags maintenance risks before gear is re-rented, and calculates precise deposit settlements.
-            </p>
-            <div className="flex gap-4 pt-2">
-              <Link to="/admin/ai-insights">
-                <Button variant="primary" size="md">
-                  View AI Insights Demo
-                </Button>
-              </Link>
-            </div>
-          </div>
 
-          <div className="bg-pure-white p-6 rounded-3xl border border-hairline-mist card-shadow w-full md:w-80 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-stone-gray uppercase">Predictive Maintenance</span>
-              <span className="px-2 py-0.5 bg-coral-pop/20 text-coral-pop font-bold text-[10px] rounded-full">
-                84% RISK
-              </span>
-            </div>
-            <div className="space-y-1">
-              <h4 className="text-sm font-bold text-ink-black">Sony FX3 Camera #02</h4>
-              <p className="text-xs text-stone-gray">18 Rentals • 240 Hours Usage</p>
-            </div>
-            <div className="p-3 bg-cream-paper rounded-2xl text-xs text-stone-gray font-medium">
-              "Sensor cleaning & cooling fan inspection required before next release."
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* CTA Footer Banner */}
       <section className="py-16 px-6 md:px-12 max-w-7xl mx-auto w-full text-center">

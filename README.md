@@ -1,6 +1,6 @@
-# RentIQ — AI-Powered Rental Management & Operations Platform
+# RentIQ — Rental Management & Operations Platform
 
-RentIQ is a complete operations platform and rental marketplace featuring a warm visual design, modern SaaS dashboard capabilities, real-time date availability checking, security deposit escrow tracking, return inspection workflows, and AI operational analytics.
+RentIQ is a complete operations platform and rental marketplace featuring a warm visual design, modern SaaS dashboard capabilities, real-time date availability checking, security deposit escrow tracking, and return inspection workflows.
 
 ---
 
@@ -14,7 +14,6 @@ rentiq/
 │   ├── ARCHITECTURE.md        # System Architecture & Component Hierarchy
 │   ├── API.md                 # REST API Specifications
 │   ├── DATABASE.md            # MongoDB Collections & Mongoose Schemas
-│   ├── AI.md                  # Demand Forecasting & Maintenance Models
 │   └── WORKFLOW.md            # Operational & Customer Journey Flows
 │
 ├── frontend/                  # React + Vite + Tailwind CSS v4 Frontend

@@ -13,7 +13,7 @@ export const apiClient = axios.create({
 // Request Interceptor to Attach JWT Token
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('rentiq_token');
-  if (token) {
+  if (token && token !== 'null' && token !== 'undefined') {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;

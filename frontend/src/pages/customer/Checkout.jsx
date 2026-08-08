@@ -9,7 +9,7 @@ import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { api } from '../../api/api';
-import { Truck, Store, CreditCard, ShieldCheck, CheckCircle2, Lock } from 'lucide-react';
+import { Truck, Store, CreditCard, ShieldCheck, CheckCircle2, Lock, Banknote } from 'lucide-react';
 
 export const Checkout = () => {
   const navigate = useNavigate();
@@ -18,6 +18,7 @@ export const Checkout = () => {
   const { addToast } = useToast();
 
   const [deliveryMethod, setDeliveryMethod] = useState('Ship to Address'); // Ship to Address vs Store Pickup
+  const [paymentMethod, setPaymentMethod] = useState('Online Payment'); // Online Payment vs Cash on Delivery
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Address State
@@ -45,22 +46,20 @@ export const Checkout = () => {
     try {
       // Create first rental item order
       const mainItem = cartItems[0];
+      const addressString = deliveryMethod === 'Ship to Address'
+        ? `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.state} - ${shippingAddress.zip}`
+        : 'Store Pickup';
+
       const rentalPayload = {
-        userId: user?.id || 'u-guest',
-        customerName: user?.name || 'Alex Johnson',
-        customerEmail: user?.email || 'customer@rentiq.com',
-        customerPhone: user?.phone || '+91 98765 43210',
-        productId: mainItem.product.id,
-        productName: mainItem.product.name,
-        productImage: mainItem.product.images[0],
+        productId: mainItem.product.id || mainItem.product._id,
         startDate: mainItem.startDate,
         endDate: mainItem.endDate,
-        deliveryMethod,
-        shippingAddress: deliveryMethod === 'Ship to Address' ? shippingAddress : null,
-        quantity: mainItem.quantity,
-        rentalFee: totalRentalFee,
+        dailyRate: mainItem.product.dailyPrice,
+        totalAmount: totalPayable,
         securityDeposit: totalSecurityDeposit,
-        totalAmount: totalPayable
+        deliveryMethod,
+        deliveryAddress: addressString,
+        paymentMethod
       };
 
       const created = await api.rentals.create(rentalPayload);
@@ -68,7 +67,9 @@ export const Checkout = () => {
       addToast('Payment Successful! Rental Confirmed.', 'success');
       navigate(`/rental-confirmation/${created.id}`);
     } catch (err) {
-      addToast('Checkout processing failed. Please try again.', 'error');
+      console.error('Checkout error:', err);
+      const msg = err.response?.data?.message || err.message || 'Checkout processing failed. Please try again.';
+      addToast(msg, 'error');
     } finally {
       setIsProcessing(false);
     }
@@ -164,42 +165,90 @@ export const Checkout = () => {
               )}
             </Card>
 
-            {/* Test Payment Gateway Simulator */}
+            {/* Payment Gateway & Method Selector */}
             <Card className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-base font-bold text-ink-black flex items-center gap-2">
                   <CreditCard className="w-5 h-5 text-fresh-grass" />
-                  <span>2. Payment & Security Deposit Escrow</span>
+                  <span>2. Select Payment & Security Deposit Method</span>
                 </h3>
                 <div className="flex items-center gap-1 text-xs text-stone-gray font-semibold bg-sandstone/30 px-3 py-1 rounded-full border border-hairline-mist">
                   <Lock className="w-3.5 h-3.5 text-[#2a6809]" />
-                  <span>Sandbox Demo Payment</span>
+                  <span>Secure Checkout</span>
                 </div>
               </div>
 
-              <div className="p-4 bg-sandstone/20 rounded-2xl border border-hairline-mist space-y-4">
-                <Input
-                  label="Card Number"
-                  value={cardNumber}
-                  onChange={(e) => setCardNumber(e.target.value)}
-                  required
-                />
-                <div className="grid grid-cols-2 gap-4">
-                  <Input
-                    label="Expiry Date"
-                    value={cardExp}
-                    onChange={(e) => setCardExp(e.target.value)}
-                    required
-                  />
-                  <Input
-                    label="CVC / CVV"
-                    type="password"
-                    value={cardCvc}
-                    onChange={(e) => setCardCvc(e.target.value)}
-                    required
-                  />
+              {/* Payment Method Selector Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div
+                  onClick={() => setPaymentMethod('Online Payment')}
+                  className={`p-5 rounded-2xl border-2 cursor-pointer transition-all ${
+                    paymentMethod === 'Online Payment'
+                      ? 'border-fresh-grass bg-[#e8f7df]/40 shadow-xs'
+                      : 'border-hairline-mist bg-pure-white hover:bg-sandstone/20'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <CreditCard className="w-6 h-6 text-ink-black" />
+                    {paymentMethod === 'Online Payment' && <CheckCircle2 className="w-5 h-5 text-[#2a6809]" />}
+                  </div>
+                  <h4 className="font-bold text-ink-black mt-3 text-sm">Online Card Payment</h4>
+                  <p className="text-xs text-stone-gray mt-1">Instant escrow hold & instant rental confirmation.</p>
+                </div>
+
+                <div
+                  onClick={() => setPaymentMethod('Cash on Delivery')}
+                  className={`p-5 rounded-2xl border-2 cursor-pointer transition-all ${
+                    paymentMethod === 'Cash on Delivery'
+                      ? 'border-fresh-grass bg-[#e8f7df]/40 shadow-xs'
+                      : 'border-hairline-mist bg-pure-white hover:bg-sandstone/20'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <Banknote className="w-6 h-6 text-ink-black" />
+                    {paymentMethod === 'Cash on Delivery' && <CheckCircle2 className="w-5 h-5 text-[#2a6809]" />}
+                  </div>
+                  <h4 className="font-bold text-ink-black mt-3 text-sm">Cash on Delivery (COD)</h4>
+                  <p className="text-xs text-stone-gray mt-1">Pay fee & deposit in cash/UPI upon gear delivery.</p>
                 </div>
               </div>
+
+              {/* Conditional Payment Method Input Box */}
+              {paymentMethod === 'Online Payment' ? (
+                <div className="p-4 bg-sandstone/20 rounded-2xl border border-hairline-mist space-y-4">
+                  <Input
+                    label="Card Number"
+                    value={cardNumber}
+                    onChange={(e) => setCardNumber(e.target.value)}
+                    required
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      label="Expiry Date"
+                      value={cardExp}
+                      onChange={(e) => setCardExp(e.target.value)}
+                      required
+                    />
+                    <Input
+                      label="CVC / CVV"
+                      type="password"
+                      value={cardCvc}
+                      onChange={(e) => setCardCvc(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="p-5 bg-sandstone/30 rounded-2xl border border-hairline-mist space-y-2 text-xs">
+                  <div className="flex items-center gap-2 text-ink-black font-bold text-sm">
+                    <Banknote className="w-4 h-4 text-fresh-grass" />
+                    <span>Cash on Delivery Guidelines</span>
+                  </div>
+                  <p className="text-stone-gray font-medium leading-relaxed">
+                    Please keep <strong>₹{totalPayable.toLocaleString()}</strong> ready in cash or UPI mode. Our delivery executive or store manager will verify your ID and collect the payment + refundable deposit upon gear handover.
+                  </p>
+                </div>
+              )}
             </Card>
           </div>
 

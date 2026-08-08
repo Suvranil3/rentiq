@@ -328,56 +328,6 @@ export const INITIAL_USERS = [
   }
 ];
 
-export const INITIAL_AI_INSIGHTS = {
-  demandForecasts: [
-    {
-      productId: "prod-101",
-      productName: "Canon EOS R6 Mark II Mirrorless Camera",
-      currentStock: 5,
-      predictedDemand: 12,
-      riskLevel: "HIGH",
-      recommendation: "Weekend wedding season peak approaching. Increase fleet stock by 4 units."
-    },
-    {
-      productId: "prod-102",
-      productName: "Sony FX3 Cinema Line Camera",
-      currentStock: 2,
-      predictedDemand: 8,
-      riskLevel: "CRITICAL",
-      recommendation: "High demand from commercial film crews. Stock deficit predicted for next 14 days."
-    },
-    {
-      productId: "prod-103",
-      productName: "DJI Mavic 3 Pro Drone Combo",
-      currentStock: 4,
-      predictedDemand: 4,
-      riskLevel: "OPTIMAL",
-      recommendation: "Inventory levels aligned with expected outdoor event bookings."
-    }
-  ],
-  predictiveMaintenance: [
-    {
-      productId: "prod-102",
-      unitSerial: "FX3-SN-88402",
-      productName: "Sony FX3 Camera (Unit #02)",
-      rentalCount: 18,
-      hoursUsed: 240,
-      damageHistoryCount: 2,
-      maintenanceRisk: 84,
-      recommendation: "High sensor cleaning & cooling fan inspection required before releasing for next rental."
-    },
-    {
-      productId: "prod-103",
-      unitSerial: "M3P-SN-1104",
-      productName: "DJI Mavic 3 Pro (Unit #04)",
-      rentalCount: 14,
-      hoursUsed: 110,
-      damageHistoryCount: 0,
-      maintenanceRisk: 35,
-      recommendation: "Routine rotor blade alignment check suggested."
-    }
-  ]
-};
 
 // Storage helper functions
 export const getLocalData = (key, initial) => {

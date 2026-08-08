@@ -29,7 +29,6 @@ const AdminReturns = lazy(() => import('../pages/admin/Returns').then(m => ({ de
 const AdminPayments = lazy(() => import('../pages/admin/Payments').then(m => ({ default: m.AdminPayments })));
 const AdminUsers = lazy(() => import('../pages/admin/Users').then(m => ({ default: m.AdminUsers })));
 const AdminPricelists = lazy(() => import('../pages/admin/Pricelists').then(m => ({ default: m.AdminPricelists })));
-const AdminAIInsights = lazy(() => import('../pages/admin/AIInsights').then(m => ({ default: m.AdminAIInsights })));
 
 const LoadingSpinner = () => (
   <div className="min-h-screen bg-cream-paper flex items-center justify-center p-8">
@@ -157,14 +156,6 @@ export const AppRoutes = () => {
           element={
             <ProtectedRoute requireAdmin>
               <AdminPricelists />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/ai-insights"
-          element={
-            <ProtectedRoute requireAdmin>
-              <AdminAIInsights />
             </ProtectedRoute>
           }
         />

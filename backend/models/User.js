@@ -27,8 +27,10 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 // Never expose password in JSON responses
 userSchema.set('toJSON', {
+  virtuals: true,
   transform: (doc, ret) => {
     delete ret.password;
+    ret.id = ret._id ? ret._id.toString() : doc._id.toString();
     return ret;
   }
 });

@@ -27,7 +27,7 @@ app.use('/api/products', require('./routes/products'));
 app.use('/api/rentals', require('./routes/rentals'));
 app.use('/api/returns', require('./routes/returns'));
 app.use('/api/payments', require('./routes/payments'));
-app.use('/api/ai', require('./routes/ai'));
+app.use('/api/users', require('./routes/users'));
 
 // 404
 app.use((req, res) => {

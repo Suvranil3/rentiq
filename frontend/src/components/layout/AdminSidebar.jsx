@@ -7,7 +7,6 @@ import {
   CalendarClock, 
   CreditCard, 
   Users, 
-  Sparkles, 
   Settings, 
   LogOut,
   ArrowLeft,
@@ -48,12 +47,6 @@ export const AdminSidebar = () => {
       items: [
         { label: "Payments & Deposits", icon: CreditCard, path: "/admin/payments" },
         { label: "Customers", icon: Users, path: "/admin/users" }
-      ]
-    },
-    {
-      title: "Intelligence",
-      items: [
-        { label: "AI Insights", icon: Sparkles, path: "/admin/ai-insights", highlight: true }
       ]
     }
   ];

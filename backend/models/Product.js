@@ -20,11 +20,12 @@ const productSchema = new mongoose.Schema({
   specifications: { type: Map, of: String, default: {} }
 }, { timestamps: true });
 
-// Virtual: auto-set status from availableStock
-productSchema.pre('save', function (next) {
-  if (this.availableStock <= 0) this.status = 'Unavailable';
-  else this.status = 'Available';
-  next();
+productSchema.set('toJSON', {
+  virtuals: true,
+  transform: (doc, ret) => {
+    ret.id = ret._id ? ret._id.toString() : doc._id.toString();
+    return ret;
+  }
 });
 
 module.exports = mongoose.model('Product', productSchema);

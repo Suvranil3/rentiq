@@ -45,6 +45,4 @@ Return Inspection Wizard (/admin/returns)
   • Confirm Return & Disburse Refund -> Restores Inventory Stock Count
        ↓
 Financial Ledger (/admin/payments) -> Audit Payments & Deposit Escrow
-       ↓
-AI Insights (/admin/ai-insights) -> Inspect Demand Surges & Fleet Maintenance Risks
 ```

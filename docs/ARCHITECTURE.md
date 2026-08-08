@@ -51,7 +51,7 @@ src/
 │   ├── public/               # Home, Products, ProductDetails
 │   ├── auth/                 # Login, Register
 │   ├── customer/             # Cart, Checkout, Confirmation, MyRentals, RentalDetails, Profile
-│   └── admin/                # Dashboard, Products, ProductForm, Rentals, RentalDetails, Returns, Payments, Users, Pricelists, AIInsights
+│   └── admin/                # Dashboard, Products, ProductForm, Rentals, RentalDetails, Returns, Payments, Users, Pricelists
 ├── App.jsx                   # Router configuration & context providers
 └── index.css                 # Tailwind v4 design system tokens
 ```

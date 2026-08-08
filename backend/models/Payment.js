@@ -13,18 +13,27 @@ const paymentSchema = new mongoose.Schema({
   method: { type: String, default: 'Online Payment' },
   status: {
     type: String,
-    enum: ['PAID', 'HELD', 'REFUNDED', 'FAILED'],
+    enum: ['PAID', 'HELD', 'PENDING', 'REFUNDED', 'FAILED'],
     default: 'PAID'
   },
   date: { type: String, default: () => new Date().toLocaleString() }
 }, { timestamps: true });
 
-// Auto-generate transactionId
+// Auto-generate unique transactionId before save
 paymentSchema.pre('save', function (next) {
   if (!this.transactionId) {
-    this.transactionId = `TXN-${Date.now()}`;
+    const rand = Math.floor(100000 + Math.random() * 900000);
+    this.transactionId = `TXN-${Date.now()}-${rand}`;
   }
   next();
+});
+
+paymentSchema.set('toJSON', {
+  virtuals: true,
+  transform: (doc, ret) => {
+    ret.id = doc.transactionId || (ret._id ? ret._id.toString() : doc._id.toString());
+    return ret;
+  }
 });
 
 module.exports = mongoose.model('Payment', paymentSchema);

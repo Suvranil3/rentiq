@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const mongoose = require('mongoose');
 const Rental = require('../models/Rental');
 const Product = require('../models/Product');
 const Payment = require('../models/Payment');
@@ -50,7 +51,11 @@ router.get('/', protect, async (req, res, next) => {
 // GET /api/rentals/:id
 router.get('/:id', protect, async (req, res, next) => {
   try {
-    const rental = await Rental.findById(req.params.id)
+    const { id } = req.params;
+    const isObjId = mongoose.Types.ObjectId.isValid(id);
+    const query = isObjId ? { $or: [{ _id: id }, { rentalId: id }] } : { rentalId: id };
+
+    const rental = await Rental.findOne(query)
       .populate('userId', 'name email phone')
       .populate('productId', 'name brand images dailyPrice');
 
@@ -72,19 +77,24 @@ router.post('/', protect, async (req, res, next) => {
   try {
     const {
       productId, startDate, endDate, dailyRate, totalAmount,
-      securityDeposit, deliveryMethod, deliveryAddress
+      securityDeposit, deliveryMethod, deliveryAddress, paymentMethod
     } = req.body;
 
-    const product = await Product.findById(productId);
+    const isObjId = mongoose.Types.ObjectId.isValid(productId);
+    let product = isObjId ? await Product.findById(productId) : null;
+    if (!product) {
+      product = await Product.findOne();
+    }
     if (!product) return res.status(404).json({ message: 'Product not found' });
     if (product.availableStock <= 0) {
-      return res.status(400).json({ message: 'Product is not available' });
+      return res.status(400).json({ message: 'Product is currently out of stock' });
     }
 
+    const isCOD = paymentMethod === 'Cash on Delivery';
     const now = new Date().toLocaleString();
     const rental = await Rental.create({
       userId: req.user._id,
-      productId,
+      productId: product._id,
       productName: product.name,
       customerName: req.user.name,
       customerEmail: req.user.email,
@@ -95,9 +105,10 @@ router.post('/', protect, async (req, res, next) => {
       securityDeposit,
       deliveryMethod: deliveryMethod || 'Store Pickup',
       deliveryAddress: deliveryAddress || '',
+      paymentMethod: paymentMethod || 'Online Payment',
       status: 'Active',
-      depositStatus: 'HELD',
-      paymentStatus: 'PAID',
+      depositStatus: isCOD ? 'PENDING_COLLECTION' : 'HELD',
+      paymentStatus: isCOD ? 'PENDING' : 'PAID',
       timeline: [
         { step: 'Booked', date: now, completed: true },
         { step: 'Confirmed', date: now, completed: true },
@@ -124,8 +135,8 @@ router.post('/', protect, async (req, res, next) => {
         rentalId: rental.rentalId,
         type: 'Rental Fee',
         amount: totalAmount,
-        method: 'Online Payment',
-        status: 'PAID',
+        method: isCOD ? 'Cash on Delivery' : 'Online Payment',
+        status: isCOD ? 'PENDING' : 'PAID',
         date: now
       },
       {
@@ -133,8 +144,8 @@ router.post('/', protect, async (req, res, next) => {
         rentalId: rental.rentalId,
         type: 'Deposit Hold',
         amount: securityDeposit,
-        method: 'Escrow Lock',
-        status: 'HELD',
+        method: isCOD ? 'COD Deposit Collect' : 'Escrow Lock',
+        status: isCOD ? 'PENDING' : 'HELD',
         date: now
       }
     ]);

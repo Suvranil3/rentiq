@@ -79,6 +79,3 @@ Processes return inspection, calculates late fee, updates deposit status (`REFUN
 
 ### `GET /api/admin/dashboard` (Admin Only)
 Returns operational KPIs, revenue charts, rental breakdown, deposit ledger, and late fee totals.
-
-### `GET /api/ai/insights` (Admin Only)
-Returns AI demand forecasting and predictive maintenance recommendations.

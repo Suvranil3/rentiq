@@ -2,13 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { AdminSidebar } from '../../components/layout/AdminSidebar';
 import { Table } from '../../components/ui/Table';
 import { Badge } from '../../components/ui/Badge';
-import { INITIAL_USERS } from '../../api/mockData';
+import { api } from '../../api/api';
 import { Users as UsersIcon, Search } from 'lucide-react';
 import { Input } from '../../components/ui/Input';
 
 export const AdminUsers = () => {
-  const [users, setUsers] = useState(INITIAL_USERS);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoading(true);
+      try {
+        const data = await api.users.getAll();
+        setUsers(data);
+      } catch (err) {
+        console.error('Failed to load users', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   const filtered = users.filter(u =>
     u.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -81,7 +97,7 @@ export const AdminUsers = () => {
           </div>
         </div>
 
-        <Table columns={columns} data={filtered} />
+        <Table columns={columns} data={filtered} isLoading={loading} />
       </main>
     </div>
   );

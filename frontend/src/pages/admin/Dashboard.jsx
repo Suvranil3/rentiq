@@ -26,9 +26,7 @@ import {
   DollarSign, 
   ShieldCheck, 
   TrendingUp, 
-  Package, 
-  ArrowRight,
-  Sparkles
+  Package
 } from 'lucide-react';
 
 export const Dashboard = () => {
@@ -262,8 +260,8 @@ export const Dashboard = () => {
 
         {/* Actionable Overdue & Returns Section */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Active / Overdue Rental Table Preview (8 cols) */}
-          <Card className="lg:col-span-8 space-y-4">
+          {/* Active / Overdue Rental Table Preview (12 cols) */}
+          <Card className="lg:col-span-12 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-base font-bold text-ink-black">Recent & Overdue Rental Orders</h3>
               <Link to="/admin/rentals" className="text-xs font-bold text-stone-gray hover:text-ink-black">
@@ -297,26 +295,6 @@ export const Dashboard = () => {
                 </div>
               ))}
             </div>
-          </Card>
-
-          {/* Quick AI Insights Teaser Box (4 cols) */}
-          <Card className="lg:col-span-4 bg-sandstone/30 border border-hairline-mist space-y-4 flex flex-col justify-between">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sky-pop">
-                <Sparkles className="w-5 h-5" />
-                <span className="text-xs font-bold uppercase tracking-wider">AI Operations Intelligence</span>
-              </div>
-              <h3 className="text-lg font-extrabold text-ink-black">Fleet Restock Alert</h3>
-              <p className="text-xs text-stone-gray leading-relaxed">
-                Predicted weekend demand for <strong>Sony FX3 Cinema Cameras</strong> exceeds available stock by 300%. Restock 4 units to capture ₹24,000 extra revenue.
-              </p>
-            </div>
-
-            <Link to="/admin/ai-insights" className="w-full">
-              <Button variant="primary" className="w-full justify-between" icon={ArrowRight}>
-                View AI Intelligence Center
-              </Button>
-            </Link>
           </Card>
         </div>
       </main>

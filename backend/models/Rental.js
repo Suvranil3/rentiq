@@ -30,6 +30,7 @@ const rentalSchema = new mongoose.Schema({
   securityDeposit: { type: Number, required: true },
   deliveryMethod: { type: String, default: 'Store Pickup' },
   deliveryAddress: { type: String, default: '' },
+  paymentMethod: { type: String, default: 'Online Payment' },
   status: {
     type: String,
     enum: ['Active', 'Returned', 'Overdue', 'Cancelled'],
@@ -37,7 +38,7 @@ const rentalSchema = new mongoose.Schema({
   },
   depositStatus: {
     type: String,
-    enum: ['HELD', 'REFUNDED', 'FULLY_DEDUCTED', 'PARTIALLY_DEDUCTED'],
+    enum: ['HELD', 'PENDING_COLLECTION', 'REFUNDED', 'FULLY_DEDUCTED', 'PARTIALLY_DEDUCTED'],
     default: 'HELD'
   },
   paymentStatus: {
@@ -49,14 +50,22 @@ const rentalSchema = new mongoose.Schema({
   inspectionReport: { type: inspectionSchema, default: null }
 }, { timestamps: true });
 
-// Auto-generate rentalId before save
-rentalSchema.pre('save', async function (next) {
+// Auto-generate unique rentalId before save
+rentalSchema.pre('save', function (next) {
   if (!this.rentalId) {
     const year = new Date().getFullYear();
-    const rand = Math.floor(1000 + Math.random() * 9000);
+    const rand = Math.floor(100000 + Math.random() * 900000);
     this.rentalId = `RNT-${year}-${rand}`;
   }
   next();
+});
+
+rentalSchema.set('toJSON', {
+  virtuals: true,
+  transform: (doc, ret) => {
+    ret.id = doc.rentalId || (ret._id ? ret._id.toString() : doc._id.toString());
+    return ret;
+  }
 });
 
 module.exports = mongoose.model('Rental', rentalSchema);

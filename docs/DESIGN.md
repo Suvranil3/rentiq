@@ -19,7 +19,7 @@ RentIQ combines:
 | `sandstone` | `#e0dbce` | Secondary surfaces, inset areas, filter backgrounds |
 | `stone-gray` | `#80827f` | Muted metadata, helper text, timestamps |
 | `hairline-mist` | `#d5d5d4` | Hairline borders and subtle dividers |
-| `sky-pop` | `#2ba0ff` | Information accent, AI insight indicators |
+| `sky-pop` | `#2ba0ff` | Information accent, status indicators |
 | `coral-pop` | `#ff705d` | Overdue, damage reports, destructive actions |
 | `sunshine-pop` | `#f5e211` | Warning, due soon, pending hold |
 
@@ -56,4 +56,4 @@ RentIQ combines:
 - **Success (`AVAILABLE`, `ACTIVE`, `PAID`, `REFUNDED`, `RETURNED`)**: Soft green background (`#e8f7df`), text `#2a6809`, indicator `#8ed462`.
 - **Warning (`DUE SOON`, `PENDING`, `HELD`)**: Soft amber background (`#fef9d7`), text `#786000`, indicator `#f5e211`.
 - **Critical (`OVERDUE`, `DAMAGED`, `UNAVAILABLE`, `FAILED`)**: Soft coral background (`#ffe8e5`), text `#9e1d0d`, indicator `#ff705d`.
-- **Info (`UPCOMING`, `PROCESSING`, `AI PREDICTION`)**: Soft sky background (`#e6f4ff`), text `#00509d`, indicator `#2ba0ff`.
+- **Info (`UPCOMING`, `PROCESSING`)**: Soft sky background (`#e6f4ff`), text `#00509d`, indicator `#2ba0ff`.

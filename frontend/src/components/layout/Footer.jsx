@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Sparkles, RefreshCw } from 'lucide-react';
+import { ShieldCheck, RefreshCw } from 'lucide-react';
 
 export const Footer = () => {
   return (
@@ -15,7 +15,7 @@ export const Footer = () => {
             <span className="text-xl font-bold tracking-tight text-ink-black">RentIQ</span>
           </div>
           <p className="text-sm text-stone-gray leading-relaxed">
-            AI-powered rental management and operations platform designed for seamless customer renting and intelligent fleet operations.
+            A rental management and operations platform designed for seamless customer renting and efficient fleet operations.
           </p>
           <div className="flex items-center gap-2 text-xs font-semibold text-stone-gray bg-pure-white px-3 py-1.5 rounded-full border border-hairline-mist w-fit">
             <ShieldCheck className="w-4 h-4 text-fresh-grass" />
@@ -51,10 +51,6 @@ export const Footer = () => {
           <ul className="space-y-2.5 text-sm text-stone-gray font-medium">
             <li><Link to="/admin/dashboard" className="hover:text-ink-black transition-colors">Operations Dashboard</Link></li>
             <li><Link to="/admin/returns" className="hover:text-ink-black transition-colors">Return Inspection</Link></li>
-            <li><Link to="/admin/ai-insights" className="hover:text-ink-black transition-colors flex items-center gap-1.5 text-sky-pop font-semibold">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>AI Insights</span>
-            </Link></li>
             <li><Link to="/admin/payments" className="hover:text-ink-black transition-colors">Deposit Settlement</Link></li>
           </ul>
         </div>

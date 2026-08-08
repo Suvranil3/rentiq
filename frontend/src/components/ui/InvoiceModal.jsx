@@ -30,7 +30,7 @@ export const InvoiceModal = ({ isOpen, onClose, rental }) => {
             </div>
             <div>
               <h2 className="text-xl font-bold text-ink-black tracking-tight">RentIQ Operations</h2>
-              <p className="text-xs text-stone-gray">AI-Powered Rental & Operations</p>
+              <p className="text-xs text-stone-gray">Rental & Operations Platform</p>
             </div>
           </div>
           <div className="text-right">
