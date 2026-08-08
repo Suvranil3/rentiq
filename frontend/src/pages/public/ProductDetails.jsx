@@ -39,6 +39,8 @@ export const ProductDetails = () => {
   const [endDate, setEndDate] = useState(inThreeDays);
   const [quantity, setQuantity] = useState(1);
 
+  const [pricingMode, setPricingMode] = useState('daily'); // 'hourly' | 'daily' | 'weekly' | 'monthly'
+
   // Availability state
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
   const [availabilityResult, setAvailabilityResult] = useState(null);
@@ -90,7 +92,34 @@ export const ProductDetails = () => {
   const diffTime = Math.max(0, end - start);
   const durationDays = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
 
-  const totalRentalFee = product ? durationDays * product.dailyPrice * quantity : 0;
+  let unitRentalFee = 0;
+  let breakdownText = '';
+
+  if (product) {
+    const hourly = product.hourlyPrice || Math.round(product.dailyPrice / 6);
+    const daily = product.dailyPrice;
+    const weekly = product.weeklyPrice || (product.dailyPrice * 6);
+    const monthly = product.monthlyPrice || (product.dailyPrice * 22);
+
+    if (pricingMode === 'hourly') {
+      const totalHours = Math.max(1, durationDays * 8);
+      unitRentalFee = totalHours * hourly;
+      breakdownText = `${totalHours} hrs (${durationDays} days × 8h @ ₹${hourly}/hr)`;
+    } else if (pricingMode === 'weekly') {
+      const weeks = Math.max(1, Math.ceil(durationDays / 7));
+      unitRentalFee = weeks * weekly;
+      breakdownText = `${weeks} week${weeks > 1 ? 's' : ''} (@ ₹${weekly.toLocaleString()}/wk)`;
+    } else if (pricingMode === 'monthly') {
+      const months = Math.max(1, Math.ceil(durationDays / 30));
+      unitRentalFee = months * monthly;
+      breakdownText = `${months} month${months > 1 ? 's' : ''} (@ ₹${monthly.toLocaleString()}/mo)`;
+    } else {
+      unitRentalFee = durationDays * daily;
+      breakdownText = `${durationDays} day${durationDays > 1 ? 's' : ''} (@ ₹${daily.toLocaleString()}/day)`;
+    }
+  }
+
+  const totalRentalFee = unitRentalFee * quantity;
   const totalSecurityDeposit = product ? product.securityDeposit * quantity : 0;
   const grandTotal = totalRentalFee + totalSecurityDeposit;
 
@@ -101,8 +130,8 @@ export const ProductDetails = () => {
       return;
     }
 
-    addToCart(product, startDate, endDate, quantity);
-    addToast(`${product.name} added to cart!`, 'success');
+    addToCart(product, startDate, endDate, quantity, totalRentalFee, pricingMode);
+    addToast(`${product.name} (${pricingMode.toUpperCase()} rate) added to cart!`, 'success');
     navigate('/cart');
   };
 
@@ -203,23 +232,37 @@ export const ProductDetails = () => {
               </div>
             </Card>
 
-            {/* Pricing Tiers */}
-            <div className="grid grid-cols-4 gap-2 bg-sandstone/30 p-2 rounded-2xl border border-hairline-mist text-center">
-              <div className="p-2 bg-pure-white rounded-xl card-shadow">
-                <span className="text-[10px] font-bold text-stone-gray uppercase block">Hourly</span>
-                <span className="text-sm font-bold text-ink-black">₹{product.hourlyPrice}</span>
-              </div>
-              <div className="p-2 bg-fresh-grass text-ink-black rounded-xl font-bold">
-                <span className="text-[10px] font-bold uppercase block opacity-80">Daily Rate</span>
-                <span className="text-sm">₹{product.dailyPrice}</span>
-              </div>
-              <div className="p-2 bg-pure-white rounded-xl card-shadow">
-                <span className="text-[10px] font-bold text-stone-gray uppercase block">Weekly</span>
-                <span className="text-sm font-bold text-ink-black">₹{product.weeklyPrice}</span>
-              </div>
-              <div className="p-2 bg-pure-white rounded-xl card-shadow">
-                <span className="text-[10px] font-bold text-stone-gray uppercase block">Monthly</span>
-                <span className="text-sm font-bold text-ink-black">₹{product.monthlyPrice}</span>
+            {/* Interactive Pricing Tier Buttons */}
+            <div className="space-y-1">
+              <span className="text-xs font-bold text-stone-gray uppercase tracking-wider block">
+                Select Pricing Mode:
+              </span>
+              <div className="grid grid-cols-4 gap-2 bg-sandstone/30 p-2 rounded-2xl border border-hairline-mist text-center">
+                {[
+                  { mode: 'hourly', label: 'Hourly', price: product.hourlyPrice || Math.round(product.dailyPrice / 6) },
+                  { mode: 'daily', label: 'Daily Rate', price: product.dailyPrice },
+                  { mode: 'weekly', label: 'Weekly', price: product.weeklyPrice || (product.dailyPrice * 6) },
+                  { mode: 'monthly', label: 'Monthly', price: product.monthlyPrice || (product.dailyPrice * 22) }
+                ].map((tier) => {
+                  const isActive = pricingMode === tier.mode;
+                  return (
+                    <button
+                      key={tier.mode}
+                      type="button"
+                      onClick={() => setPricingMode(tier.mode)}
+                      className={`p-2.5 rounded-xl font-bold cursor-pointer transition-all ${
+                        isActive
+                          ? 'bg-fresh-grass text-ink-black shadow-xs ring-2 ring-fresh-grass/40 scale-[1.02]'
+                          : 'bg-pure-white text-ink-black hover:bg-sandstone/40 card-shadow'
+                      }`}
+                    >
+                      <span className={`text-[10px] font-bold uppercase block ${isActive ? 'opacity-90' : 'text-stone-gray'}`}>
+                        {tier.label}
+                      </span>
+                      <span className="text-sm">₹{tier.price.toLocaleString()}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -282,7 +325,7 @@ export const ProductDetails = () => {
               {/* Price Calculation Summary */}
               <div className="pt-4 border-t border-hairline-mist space-y-2 text-sm">
                 <div className="flex justify-between text-stone-gray font-medium">
-                  <span>Rental Fee ({durationDays} days × ₹{product.dailyPrice}):</span>
+                  <span>Rental Fee ({breakdownText}):</span>
                   <span className="font-bold text-ink-black">₹{totalRentalFee.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-stone-gray font-medium">

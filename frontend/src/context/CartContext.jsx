@@ -12,9 +12,10 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('rentiq_cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (product, startDate, endDate, quantity = 1) => {
+  const addToCart = (product, startDate, endDate, quantity = 1, customRentalFee = null, pricingMode = 'daily') => {
     setCartItems(prev => {
-      const existingIndex = prev.findIndex(item => item.product.id === product.id);
+      const prodId = product.id || product._id;
+      const existingIndex = prev.findIndex(item => (item.product.id || item.product._id) === prodId);
       
       // Calculate rental duration in days
       const start = new Date(startDate);
@@ -22,7 +23,7 @@ export const CartProvider = ({ children }) => {
       const diffTime = Math.abs(end - start);
       const days = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
 
-      const rentalFeePerUnit = days * product.dailyPrice;
+      const computedFee = customRentalFee !== null ? customRentalFee : (days * product.dailyPrice * quantity);
 
       if (existingIndex > -1) {
         const updated = [...prev];
@@ -31,8 +32,9 @@ export const CartProvider = ({ children }) => {
           startDate,
           endDate,
           days,
+          pricingMode,
           quantity: updated[existingIndex].quantity + quantity,
-          rentalFee: rentalFeePerUnit * (updated[existingIndex].quantity + quantity)
+          rentalFee: updated[existingIndex].rentalFee + computedFee
         };
         return updated;
       }
@@ -45,8 +47,9 @@ export const CartProvider = ({ children }) => {
           startDate,
           endDate,
           days,
+          pricingMode,
           quantity,
-          rentalFee: rentalFeePerUnit * quantity,
+          rentalFee: computedFee,
           securityDeposit: product.securityDeposit * quantity
         }
       ];
