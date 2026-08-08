@@ -77,6 +77,18 @@ export const Dashboard = () => {
     loadData();
   };
 
+  const handleViewOverdue = () => {
+    setTableStatusFilter('Overdue');
+    setTimeout(() => {
+      const el = document.getElementById('recent-orders-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        navigate('/admin/rentals?status=Overdue');
+      }
+    }, 50);
+  };
+
   // Dynamic Metrics Computations
   const activeCount = useMemo(() => rentals.filter(r => r.status === 'Active').length, [rentals]);
   const overdueCount = useMemo(() => rentals.filter(r => r.status === 'Overdue').length, [rentals]);
@@ -258,14 +270,14 @@ export const Dashboard = () => {
             <div className="flex items-center gap-2 self-end sm:self-auto">
               {overdueCount > 0 && (
                 <button
-                  onClick={() => { setTableStatusFilter('Overdue'); }}
-                  className="text-xs font-bold text-coral-pop hover:underline px-3 py-1.5 rounded-full bg-[#ffe8e5] border border-[#ffc2bb]"
+                  onClick={handleViewOverdue}
+                  className="text-xs font-bold text-coral-pop hover:underline px-3.5 py-1.5 rounded-full bg-[#ffe8e5] border border-[#ffc2bb] cursor-pointer transition-all hover:bg-[#ffdcd7]"
                 >
                   View Overdue →
                 </button>
               )}
               <Link to="/admin/products">
-                <button className="text-xs font-bold text-ink-black hover:bg-sandstone/40 px-3 py-1.5 rounded-full bg-sandstone/30 border border-hairline-mist">
+                <button className="text-xs font-bold text-ink-black hover:bg-sandstone/40 px-3.5 py-1.5 rounded-full bg-sandstone/30 border border-hairline-mist cursor-pointer">
                   Manage Fleet Catalog
                 </button>
               </Link>
@@ -281,6 +293,13 @@ export const Dashboard = () => {
             subtext="Equipment out with customers"
             icon={CalendarClock}
             accentColor="fresh-grass"
+            onClick={() => {
+              setTableStatusFilter('Active');
+              setTimeout(() => {
+                const el = document.getElementById('recent-orders-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 50);
+            }}
             trend={{ value: '+14%', positive: true }}
           />
           <StatCard
@@ -289,6 +308,7 @@ export const Dashboard = () => {
             subtext="Requires return inspection & late fee"
             icon={AlertTriangle}
             accentColor="coral-pop"
+            onClick={handleViewOverdue}
             trend={{ value: `${overdueCount} pending`, positive: false }}
           />
           <StatCard
@@ -516,7 +536,7 @@ export const Dashboard = () => {
         </div>
 
         {/* Actionable Orders Operations Center Table */}
-        <Card className="space-y-6">
+        <Card id="recent-orders-section" className="space-y-6 scroll-mt-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-hairline-mist">
             <div>
               <h3 className="text-base font-bold text-ink-black">Fleet Operations & Recent Orders</h3>

@@ -8,7 +8,9 @@ export const StatCard = ({
   subtext,
   icon: Icon,
   trend, // { value: '+12%', positive: true }
-  accentColor = 'fresh-grass' // fresh-grass | sunshine-pop | coral-pop | sky-pop
+  accentColor = 'fresh-grass', // fresh-grass | sunshine-pop | coral-pop | sky-pop
+  onClick,
+  className = ''
 }) => {
   const accentBorder = {
     'fresh-grass': 'border-l-4 border-l-fresh-grass',
@@ -18,7 +20,10 @@ export const StatCard = ({
   }[accentColor] || '';
 
   return (
-    <Card className={`relative overflow-hidden ${accentBorder}`}>
+    <Card 
+      onClick={onClick}
+      className={`relative overflow-hidden ${accentBorder} ${onClick ? 'cursor-pointer hover:border-fresh-grass/50 hover:shadow-md transition-all' : ''} ${className}`}
+    >
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <span className="text-xs font-bold text-stone-gray uppercase tracking-wider block">{title}</span>
