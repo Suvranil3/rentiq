@@ -1,0 +1,22 @@
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+import { ToastProvider } from './context/ToastContext';
+import { AppRoutes } from './routes/AppRoutes';
+
+export function App() {
+  return (
+    <AuthProvider>
+      <CartProvider>
+        <ToastProvider>
+          <Router>
+            <AppRoutes />
+          </Router>
+        </ToastProvider>
+      </CartProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;
