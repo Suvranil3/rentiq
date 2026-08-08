@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Centralized Axios Instance with Base URL from Environment Variable
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const apiClient = axios.create({
   baseURL: API_URL,
@@ -23,8 +23,11 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Graceful error propagation
-    return Promise.reject(error);
+    // Extract actual server error message if present
+    const message = error.response?.data?.message || error.response?.data?.errors?.[0]?.msg || error.message;
+    const customError = new Error(message);
+    customError.response = error.response;
+    return Promise.reject(customError);
   }
 );
 

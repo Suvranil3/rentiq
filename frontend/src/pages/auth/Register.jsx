@@ -24,7 +24,7 @@ export const Register = () => {
       addToast('Registration successful! Welcome to RentIQ.', 'success');
       navigate('/');
     } catch (err) {
-      addToast('Registration failed. Please check inputs.', 'error');
+      addToast(err.message || 'Registration failed. Please check inputs.', 'error');
     }
   };
 

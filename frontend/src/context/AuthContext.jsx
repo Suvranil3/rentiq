@@ -63,8 +63,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginAsDemoUser = async (role = 'customer') => {
-    const demoEmail = role === 'admin' ? 'admin@rentiq.com' : 'customer@rentiq.com';
-    return await login(demoEmail, 'password123');
+    const demoEmail = role === 'admin' ? 'admin@rentiq.com' : 'alex@example.com';
+    const demoPassword = role === 'admin' ? 'admin123' : 'customer123';
+    return await login(demoEmail, demoPassword);
   };
 
   const value = {

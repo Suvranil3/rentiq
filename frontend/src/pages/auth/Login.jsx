@@ -31,7 +31,8 @@ export const Login = () => {
         navigate(from);
       }
     } catch (err) {
-      setError('Invalid credentials. Please try again.');
+      console.error('Login error details:', err);
+      setError(err.message || 'Invalid credentials. Please try again.');
     }
   };
 
