@@ -8,7 +8,7 @@ const { getUsers } = require('../utils/sharedStore');
 router.get('/', protect, requireAdmin, async (req, res, next) => {
   try {
     if (mongoose.connection.readyState === 1) {
-      const users = await User.find().sort({ createdAt: -1 });
+      const users = await User.find({ role: 'customer' }).sort({ createdAt: -1 });
       if (users && users.length > 0) {
         return res.json(users);
       }

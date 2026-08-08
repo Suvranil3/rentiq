@@ -28,7 +28,7 @@ router.post(
         const existing = await User.findOne({ email });
         if (existing) return res.status(400).json({ message: 'Email already registered' });
 
-        const user = await User.create({ name, email, password, phone: phone || '' });
+        const user = await User.create({ name, email, password, phone: phone || '', role: 'customer' });
         const token = signToken(user._id);
 
         // Also track in memory store for consistency
