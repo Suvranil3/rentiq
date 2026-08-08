@@ -166,8 +166,12 @@ export const ProductDetails = () => {
           <div className="lg:col-span-5 space-y-4">
             <div className="aspect-4/3 rounded-3xl overflow-hidden bg-pure-white border border-hairline-mist card-shadow">
               <img
-                src={product.images[selectedImage] || product.images[0]}
+                src={(product.images && product.images[selectedImage]) || product.images[0] || 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80'}
                 alt={product.name}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80';
+                }}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -181,7 +185,15 @@ export const ProductDetails = () => {
                       selectedImage === idx ? 'border-fresh-grass ring-2 ring-fresh-grass/30' : 'border-hairline-mist opacity-70'
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={img}
+                      alt=""
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80';
+                      }}
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>

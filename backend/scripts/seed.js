@@ -55,7 +55,7 @@ const PRODUCTS = [
     totalStock: 4,
     availableStock: 4,
     images: [
-      'https://images.unsplash.com/photo-1571945147346-4b7fd5df5c41?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80'
     ],
     specifications: { 'Payload': '3.6 kg', 'Battery Life': '12 hours', 'Axes': '3-Axis', 'Weight': '1.8 kg' }
   },

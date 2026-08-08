@@ -27,8 +27,12 @@ export const ProductCard = ({ product }) => {
         {/* Product Image Container */}
         <div className="relative aspect-4/3 bg-sandstone/30 overflow-hidden">
           <img
-            src={product.images[0]}
+            src={(product.images && product.images[0]) || 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80'}
             alt={product.name}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80';
+            }}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute top-3 right-3">

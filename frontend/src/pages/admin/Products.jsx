@@ -41,8 +41,12 @@ export const AdminProducts = () => {
       cell: (row) => (
         <div className="flex items-center gap-3">
           <img
-            src={row.images[0]}
-            alt=""
+            src={(row.images && row.images[0]) || 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80'}
+            alt={row.name}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80';
+            }}
             className="w-12 h-12 rounded-xl object-cover bg-sandstone/30 border border-hairline-mist shrink-0"
           />
           <div>

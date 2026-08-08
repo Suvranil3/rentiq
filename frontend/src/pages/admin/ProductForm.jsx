@@ -218,7 +218,7 @@ export const ProductForm = () => {
             </div>
           </Card>
 
-          {/* Image URL */}
+          {/* Image URL & Live Preview */}
           <Card className="space-y-4">
             <h3 className="text-base font-bold text-ink-black">3. Product Photography</h3>
             <Input
@@ -227,6 +227,22 @@ export const ProductForm = () => {
               onChange={(e) => handleChange('imageUrl', e.target.value)}
               placeholder="https://images.unsplash.com/..."
             />
+            {formData.imageUrl && (
+              <div className="pt-2">
+                <span className="text-xs font-bold text-stone-gray uppercase block mb-1.5">Live Image Preview:</span>
+                <div className="w-24 h-24 rounded-2xl overflow-hidden bg-sandstone/30 border border-hairline-mist card-shadow">
+                  <img
+                    src={formData.imageUrl}
+                    alt="Preview"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80';
+                    }}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            )}
           </Card>
 
           <div className="flex justify-end gap-4">
