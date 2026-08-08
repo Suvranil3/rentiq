@@ -17,7 +17,7 @@ export const Badge = ({
   } else if (['DUE SOON', 'PENDING', 'HELD', 'PROCESSING'].includes(normalized)) {
     badgeStyle = "bg-[#fef9d7] text-[#786000] border-[#f9ee9d]";
     dotStyle = "bg-sunshine-pop";
-  } else if (['OVERDUE', 'DAMAGED', 'UNAVAILABLE', 'FAILED', 'CANCELLED', 'FULLY_DEDUCTED', 'CRITICAL'].includes(normalized)) {
+  } else if (['OVERDUE', 'DAMAGED', 'UNAVAILABLE', 'OUT OF STOCK', 'ALL DISTRIBUTED', 'RENTED OUT', 'FAILED', 'CANCELLED', 'FULLY_DEDUCTED', 'CRITICAL'].some(k => normalized.includes(k))) {
     badgeStyle = "bg-[#ffe8e5] text-[#9e1d0d] border-[#ffc2bb]";
     dotStyle = "bg-coral-pop";
   } else if (['UPCOMING', 'SHIPPED', 'PARTIALLY_DEDUCTED', 'AI PREDICTION'].includes(normalized)) {

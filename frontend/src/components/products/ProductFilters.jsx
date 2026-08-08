@@ -64,14 +64,14 @@ export const ProductFilters = ({
       <div className="space-y-2">
         <div className="flex justify-between items-center text-xs">
           <span className="font-bold text-ink-black uppercase tracking-wider">Max Daily Rate</span>
-          <span className="font-bold text-fresh-grass text-sm">₹{Number(filters.maxPrice || 5000).toLocaleString()}</span>
+          <span className="font-bold text-fresh-grass text-sm">₹{Number(filters.maxPrice || 25000).toLocaleString()}</span>
         </div>
         <input
           type="range"
           min="500"
-          max="10000"
+          max="25000"
           step="500"
-          value={filters.maxPrice || 5000}
+          value={filters.maxPrice || 25000}
           onChange={(e) => onFilterChange('maxPrice', e.target.value)}
           className="w-full accent-fresh-grass cursor-pointer"
         />

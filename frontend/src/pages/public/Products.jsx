@@ -20,13 +20,25 @@ export const Products = () => {
     search: searchParams.get('search') || '',
     category: searchParams.get('category') || 'All',
     brand: searchParams.get('brand') || 'All',
-    maxPrice: searchParams.get('maxPrice') || '10000',
+    maxPrice: searchParams.get('maxPrice') || '25000',
     availableOnly: false,
     sortBy: 'recommended'
   });
 
-  const categories = ['Cameras', 'Lenses', 'Drones', 'Audio', 'Lighting', 'Stabilizers', 'Production'];
-  const brands = ['Sony', 'Canon', 'ARRI', 'RED', 'Blackmagic', 'DJI', 'Sennheiser', 'Aputure', 'Nikon', 'Panasonic', 'Fujifilm', 'Leica', 'Shure', 'Rode', 'Sound Devices', 'Astera', 'Nanlite', 'Apple'];
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+
+  useEffect(() => {
+    // Fetch full catalog once to populate filter categories & brands
+    api.products.getAll({}).then((allData) => {
+      if (allData && Array.isArray(allData)) {
+        const cats = Array.from(new Set(allData.map(p => p.category))).filter(Boolean).sort();
+        const brs = Array.from(new Set(allData.map(p => p.brand))).filter(Boolean).sort();
+        setCategories(cats);
+        setBrands(brs);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {

@@ -204,8 +204,8 @@ export const ProductDetails = () => {
           <div className="lg:col-span-7 space-y-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Badge status={product.availableStock > 0 ? 'Available' : 'Unavailable'}>
-                  {product.availableStock > 0 ? 'Available Now' : 'Out of Stock'}
+                <Badge status={product.availableStock > 0 ? 'Available' : 'Out of Stock'}>
+                  {product.availableStock > 0 ? `${product.availableStock} Available Now` : 'All Distributed (0 Available)'}
                 </Badge>
                 <span className="text-xs font-bold text-stone-gray uppercase tracking-widest bg-sandstone/30 px-3 py-1 rounded-full">
                   {product.category}
@@ -324,7 +324,9 @@ export const ProductDetails = () => {
                     <Info className="w-5 h-5 text-coral-pop" />
                   )}
                   <span className="text-xs font-bold text-ink-black">
-                    {isCheckingAvailability
+                    {product.availableStock === 0
+                      ? '✖ Out of Stock — All units currently distributed'
+                      : isCheckingAvailability
                       ? 'Checking fleet availability...'
                       : availabilityResult?.available
                       ? `✓ In Stock & Available for ${durationDays} Days (${availabilityResult.remainingStock} available)`
@@ -357,9 +359,9 @@ export const ProductDetails = () => {
                 className="w-full"
                 icon={ShoppingBag}
                 onClick={handleAddToCart}
-                disabled={availabilityResult && !availabilityResult.available}
+                disabled={product.availableStock === 0 || (availabilityResult && !availabilityResult.available)}
               >
-                Rent Now & Reserve
+                {product.availableStock === 0 ? 'Out of Stock - All Distributed' : 'Rent Now & Reserve'}
               </Button>
             </Card>
           </div>

@@ -36,8 +36,8 @@ export const ProductCard = ({ product }) => {
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute top-3 right-3">
-            <Badge status={isAvailable ? 'Available' : 'Unavailable'} size="sm">
-              {isAvailable ? `${product.availableStock} Available` : 'Rented Out'}
+            <Badge status={isAvailable ? 'Available' : 'Out of Stock'} size="sm">
+              {isAvailable ? `${product.availableStock} Available` : 'All Distributed (0 Left)'}
             </Badge>
           </div>
           <div className="absolute top-3 left-3 bg-pure-white/90 backdrop-blur-xs px-2.5 py-1 rounded-full text-[11px] font-bold text-ink-black border border-hairline-mist">

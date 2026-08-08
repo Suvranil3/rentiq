@@ -23,6 +23,7 @@ const rentalSchema = new mongoose.Schema({
   productName: { type: String, required: true },
   customerName: { type: String, default: '' },
   customerEmail: { type: String, default: '' },
+  customerPhone: { type: String, default: '' },
   startDate: { type: String, required: true },
   endDate: { type: String, required: true },
   dailyRate: { type: Number, required: true },

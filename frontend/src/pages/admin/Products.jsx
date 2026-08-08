@@ -75,14 +75,14 @@ export const AdminProducts = () => {
     {
       header: 'Stock Fleet',
       cell: (row) => (
-        <span className="text-xs font-bold text-ink-black">
-          {row.availableStock} / {row.totalStock} Available
+        <span className={`text-xs font-bold ${row.availableStock === 0 ? 'text-coral-pop' : 'text-ink-black'}`}>
+          {row.availableStock === 0 ? `0 / ${row.totalStock} Available (All Distributed)` : `${row.availableStock} / ${row.totalStock} Available`}
         </span>
       )
     },
     {
       header: 'Status',
-      cell: (row) => <Badge status={row.availableStock > 0 ? 'Available' : 'Unavailable'} size="sm" />
+      cell: (row) => <Badge status={row.availableStock > 0 ? 'Available' : 'All Distributed'} size="sm" />
     },
     {
       header: 'Actions',

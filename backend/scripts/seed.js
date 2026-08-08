@@ -1,6 +1,5 @@
 require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Product = require('../models/Product');
 const Rental = require('../models/Rental');
@@ -9,177 +8,39 @@ const Address = require('../models/Address');
 const Quotation = require('../models/Quotation');
 const Invoice = require('../models/Invoice');
 const Pricelist = require('../models/Pricelist');
+const { FULL_PRODUCTS } = require('./productData');
 
-const PRODUCTS = [
-  {
-    name: 'Sony Alpha A7 III',
-    brand: 'Sony',
-    category: 'Camera',
-    description: 'Full-frame mirrorless camera with 24.2MP sensor. Perfect for professional photography.',
-    dailyPrice: 1500,
-    weeklyPrice: 8500,
-    monthlyPrice: 28000,
-    securityDeposit: 25000,
-    totalStock: 3,
-    availableStock: 3,
-    images: [
-      'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80'
-    ],
-    specifications: { 'Sensor': '24.2MP Full-Frame', 'ISO': '100-51200', 'Video': '4K HDR', 'Weight': '565g' }
-  },
-  {
-    name: 'Canon EOS R5',
-    brand: 'Canon',
-    category: 'Camera',
-    description: 'High-resolution 45MP mirrorless camera with 8K RAW video recording.',
-    dailyPrice: 2000,
-    weeklyPrice: 12000,
-    monthlyPrice: 40000,
-    securityDeposit: 35000,
-    totalStock: 2,
-    availableStock: 2,
-    images: [
-      'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80'
-    ],
-    specifications: { 'Sensor': '45MP Full-Frame', 'ISO': '100-102400', 'Video': '8K RAW', 'Weight': '738g' }
-  },
-  {
-    name: 'DJI Ronin-S',
-    brand: 'DJI',
-    category: 'Stabilizer',
-    description: '3-axis gimbal stabilizer for DSLR and mirrorless cameras up to 3.6kg.',
-    dailyPrice: 800,
-    weeklyPrice: 4500,
-    monthlyPrice: 15000,
-    securityDeposit: 12000,
-    totalStock: 4,
-    availableStock: 4,
-    images: [
-      'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80'
-    ],
-    specifications: { 'Payload': '3.6 kg', 'Battery Life': '12 hours', 'Axes': '3-Axis', 'Weight': '1.8 kg' }
-  },
-  {
-    name: 'Rode NT1-A Microphone',
-    brand: 'Rode',
-    category: 'Audio',
-    description: 'Studio-quality condenser microphone with ultra-low noise floor.',
-    dailyPrice: 400,
-    weeklyPrice: 2200,
-    monthlyPrice: 7500,
-    securityDeposit: 8000,
-    totalStock: 5,
-    availableStock: 5,
-    images: [
-      'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=800&q=80'
-    ],
-    specifications: { 'Type': 'Condenser', 'Pattern': 'Cardioid', 'Frequency': '20Hz–20kHz', 'S/N Ratio': '88dB' }
-  },
-  {
-    name: 'Godox AD400 Pro Flash',
-    brand: 'Godox',
-    category: 'Lighting',
-    description: 'Outdoor battery-powered strobe flash, 400W with TTL & HSS support.',
-    dailyPrice: 600,
-    weeklyPrice: 3500,
-    monthlyPrice: 12000,
-    securityDeposit: 10000,
-    totalStock: 6,
-    availableStock: 6,
-    images: [
-      'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80'
-    ],
-    specifications: { 'Power': '400W', 'Recycle Time': '0.01-1.5s', 'Battery Life': '390 full-power flashes', 'Weight': '1.3 kg' }
-  },
-  {
-    name: 'DJI Mavic 3 Pro Drone',
-    brand: 'DJI',
-    category: 'Drone',
-    description: 'Professional drone with triple-camera Hasselblad system and 43-min flight time.',
-    dailyPrice: 3500,
-    weeklyPrice: 20000,
-    monthlyPrice: 65000,
-    securityDeposit: 50000,
-    totalStock: 2,
-    availableStock: 2,
-    images: [
-      'https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=800&q=80'
-    ],
-    specifications: { 'Camera': 'Hasselblad L-Format', 'Max Flight': '43 min', 'Range': '15 km', 'Video': '5.1K/50fps' }
-  },
-  {
-    name: 'MacBook Pro M3 Max 16"',
-    brand: 'Apple',
-    category: 'Laptop',
-    description: 'Professional-grade laptop for video editing, 3D rendering, and creative work.',
-    dailyPrice: 2500,
-    weeklyPrice: 15000,
-    monthlyPrice: 50000,
-    securityDeposit: 80000,
-    totalStock: 3,
-    availableStock: 3,
-    images: [
-      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80'
-    ],
-    specifications: { 'Chip': 'Apple M3 Max', 'RAM': '128GB', 'Storage': '4TB SSD', 'Display': '16.2" Liquid Retina XDR' }
-  },
-  {
-    name: 'Sennheiser EW 100 G4 Wireless Kit',
-    brand: 'Sennheiser',
-    category: 'Audio',
-    description: 'Professional wireless microphone system with bodypack transmitter and handheld.',
-    dailyPrice: 700,
-    weeklyPrice: 4000,
-    monthlyPrice: 13500,
-    securityDeposit: 15000,
-    totalStock: 4,
-    availableStock: 4,
-    images: [
-      'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=800&q=80'
-    ],
-    specifications: { 'Frequency': 'UHF', 'Range': '100 m', 'Battery': 'AA x2', 'Channels': '20 banks x 12' }
-  }
-];
-
-const USERS = [
-  {
-    name: 'Admin User',
-    email: 'admin@rentiq.com',
-    password: 'admin123',
-    role: 'admin',
-    phone: '+91 98765 00001',
-    status: 'Active'
-  },
-  {
-    name: 'Alex Johnson',
-    email: 'alex@example.com',
-    password: 'customer123',
-    role: 'customer',
-    phone: '+91 98765 43210',
-    status: 'Active',
-    totalRentals: 3,
-    activeRentals: 1
-  },
-  {
-    name: 'Priya Sharma',
-    email: 'priya@example.com',
-    password: 'customer123',
-    role: 'customer',
-    phone: '+91 98765 11111',
-    status: 'Active',
-    totalRentals: 2,
-    activeRentals: 1
-  },
-  {
-    name: 'Rohan Verma',
-    email: 'rohan@example.com',
-    password: 'customer123',
-    role: 'customer',
-    phone: '+91 98765 22222',
-    status: 'Active',
-    totalRentals: 1,
-    activeRentals: 0
-  }
+const CUSTOMERS_RAW = [
+  { name: 'Alex Johnson', email: 'alex@example.com', phone: '+91 98765 43210', street: '42 Studio Heights, Indiranagar', city: 'Bengaluru', state: 'Karnataka', zip: '560038' },
+  { name: 'Priya Sharma', email: 'priya@example.com', phone: '+91 98765 11111', street: '12 MG Road, Ashok Nagar', city: 'Bengaluru', state: 'Karnataka', zip: '560001' },
+  { name: 'Rohan Verma', email: 'rohan@example.com', phone: '+91 98765 22222', street: '88 Bandra Reclamation', city: 'Mumbai', state: 'Maharashtra', zip: '400050' },
+  { name: 'Aanya Kapoor', email: 'aanya@example.com', phone: '+91 98765 33333', street: '15 Connaught Place', city: 'New Delhi', state: 'Delhi', zip: '110001' },
+  { name: 'Kabir Mehta', email: 'kabir@example.com', phone: '+91 98765 44444', street: '74 Juhu Tara Road', city: 'Mumbai', state: 'Maharashtra', zip: '400049' },
+  { name: 'Neha Gupta', email: 'neha@example.com', phone: '+91 98765 55555', street: '29 Jubilee Hills, Road No. 36', city: 'Hyderabad', state: 'Telangana', zip: '500033' },
+  { name: 'Vikram Malhotra', email: 'vikram@example.com', phone: '+91 98765 66666', street: '102 Nungambakkam High Rd', city: 'Chennai', state: 'Tamil Nadu', zip: '600034' },
+  { name: 'Diya Sen', email: 'diya@example.com', phone: '+91 98765 77777', street: '5 Park Street', city: 'Kolkata', state: 'West Bengal', zip: '700016' },
+  { name: 'Arjun Nair', email: 'arjun@example.com', phone: '+91 98765 88888', street: '63 MG Road, Fort Kochi', city: 'Kochi', state: 'Kerala', zip: '682001' },
+  { name: 'Sanya Patel', email: 'sanya@example.com', phone: '+91 98765 99999', street: '14 CG Road, Navrangpura', city: 'Ahmedabad', state: 'Gujarat', zip: '380009' },
+  { name: 'Aditya Joshi', email: 'aditya@example.com', phone: '+91 98765 12345', street: '51 FC Road, Shivajinagar', city: 'Pune', state: 'Maharashtra', zip: '411004' },
+  { name: 'Meera Rao', email: 'meera@example.com', phone: '+91 98765 23456', street: '89 Koramangala 5th Block', city: 'Bengaluru', state: 'Karnataka', zip: '560095' },
+  { name: 'Dev Bhatia', email: 'dev@example.com', phone: '+91 98765 34567', street: '22 Sector 17-C', city: 'Chandigarh', state: 'Chandigarh', zip: '160017' },
+  { name: 'Ishita Roy', email: 'ishita@example.com', phone: '+91 98765 45678', street: '45 Salt Lake Sector V', city: 'Kolkata', state: 'West Bengal', zip: '700091' },
+  { name: 'Karan Saxena', email: 'karan@example.com', phone: '+91 98765 56789', street: '78 C-Scheme, Ashok Nagar', city: 'Jaipur', state: 'Rajasthan', zip: '302001' },
+  { name: 'Anushka Reddy', email: 'anushka@example.com', phone: '+91 98765 67890', street: '33 Gachibowli Main Rd', city: 'Hyderabad', state: 'Telangana', zip: '500032' },
+  { name: 'Rahul Deshmukh', email: 'rahul@example.com', phone: '+91 98765 78901', street: '11 Powai Plaza, Hiranandani', city: 'Mumbai', state: 'Maharashtra', zip: '400076' },
+  { name: 'Pooja Banerjee', email: 'pooja@example.com', phone: '+91 98765 89012', street: '92 Ballygunge Circular Rd', city: 'Kolkata', state: 'West Bengal', zip: '700019' },
+  { name: 'Siddharth Gill', email: 'siddharth@example.com', phone: '+91 98765 90123', street: '5 Sector 35-B', city: 'Chandigarh', state: 'Chandigarh', zip: '160035' },
+  { name: 'Tanvi Kulkarni', email: 'tanvi@example.com', phone: '+91 98765 01234', street: '67 Viman Nagar, Datta Mandir', city: 'Pune', state: 'Maharashtra', zip: '411014' },
+  { name: 'Yash Singhania', email: 'yash@example.com', phone: '+91 98765 11223', street: '104 Greater Kailash 1', city: 'New Delhi', state: 'Delhi', zip: '110048' },
+  { name: 'Ritika Agarwal', email: 'ritika@example.com', phone: '+91 98765 22334', street: '19 Sector 62, Electronic City', city: 'Noida', state: 'Uttar Pradesh', zip: '201301' },
+  { name: 'Manish Chopra', email: 'manish@example.com', phone: '+91 98765 33445', street: '85 DLF Phase 5', city: 'Gurugram', state: 'Haryana', zip: '122002' },
+  { name: 'Shreya Iyer', email: 'shreya@example.com', phone: '+91 98765 44556', street: '41 Adyar East', city: 'Chennai', state: 'Tamil Nadu', zip: '600020' },
+  { name: 'Tarun Dave', email: 'tarun@example.com', phone: '+91 98765 55667', street: '12 Ghod Dod Road', city: 'Surat', state: 'Gujarat', zip: '395007' },
+  { name: 'Nisha Pandey', email: 'nisha@example.com', phone: '+91 98765 66778', street: '30 Hazratganj Main Market', city: 'Lucknow', state: 'Uttar Pradesh', zip: '226001' },
+  { name: 'Varun Khurana', email: 'varun@example.com', phone: '+91 98765 77889', street: '53 Vasant Vihar Block B', city: 'New Delhi', state: 'Delhi', zip: '110057' },
+  { name: 'Kavya Menon', email: 'kavya@example.com', phone: '+91 98765 88990', street: '84 Kowdiar Palace Rd', city: 'Thiruvananthapuram', state: 'Kerala', zip: '695003' },
+  { name: 'Sameer Jain', email: 'sameer@example.com', phone: '+91 98765 99001', street: '26 Vijay Nagar, AB Road', city: 'Indore', state: 'Madhya Pradesh', zip: '452010' },
+  { name: 'Deepika Sethi', email: 'deepika@example.com', phone: '+91 98765 00112', street: '99 HSR Layout Sector 1', city: 'Bengaluru', state: 'Karnataka', zip: '560102' }
 ];
 
 async function seed() {
@@ -198,200 +59,299 @@ async function seed() {
     await Pricelist.deleteMany({});
     console.log('🗑️  Cleared existing data');
 
-    // Seed users
-    const createdUsers = await User.create(USERS);
-    console.log(`👥 Created ${createdUsers.length} users`);
+    // 1. Create Admin & Customer Users
+    const usersToCreate = [
+      {
+        name: 'Admin User',
+        email: 'admin@rentiq.com',
+        password: 'admin123',
+        role: 'admin',
+        phone: '+91 98765 00001',
+        status: 'Active',
+        joinedDate: '2026-07-01'
+      },
+      ...CUSTOMERS_RAW.map((c, index) => ({
+        name: c.name,
+        email: c.email,
+        password: 'customer123',
+        role: 'customer',
+        phone: c.phone,
+        status: index % 15 === 14 ? 'Suspended' : 'Active',
+        joinedDate: `2026-07-${String((index % 25) + 1).padStart(2, '0')}`,
+        totalRentals: 0,
+        activeRentals: 0
+      }))
+    ];
 
-    // Seed products
-    const createdProducts = await Product.insertMany(PRODUCTS);
-    console.log(`📦 Created ${createdProducts.length} products`);
+    const createdUsers = await User.create(usersToCreate);
+    const adminUser = createdUsers.find(u => u.role === 'admin');
+    const customerUsers = createdUsers.filter(u => u.role === 'customer');
+    console.log(`👥 Created ${createdUsers.length} users (1 Admin + 30 Customers)`);
 
-    // Seed pricelists
+    // 2. Create Products from 215+ Unique Product Catalog
+    const createdProducts = await Product.insertMany(FULL_PRODUCTS);
+    console.log(`📦 Created ${createdProducts.length} unique equipment products`);
+
+    // 3. Create Pricelists
     const pricelists = await Pricelist.insertMany([
-      { category: 'Camera', hourlyRate: 300, dailyRate: 1500, weeklyRate: 8500, monthlyRate: 28000, securityDeposit: 25000 },
-      { category: 'Stabilizer', hourlyRate: 150, dailyRate: 800, weeklyRate: 4500, monthlyRate: 15000, securityDeposit: 12000 },
-      { category: 'Audio', hourlyRate: 80, dailyRate: 400, weeklyRate: 2200, monthlyRate: 7500, securityDeposit: 8000 },
-      { category: 'Lighting', hourlyRate: 120, dailyRate: 600, weeklyRate: 3500, monthlyRate: 12000, securityDeposit: 10000 },
-      { category: 'Drone', hourlyRate: 700, dailyRate: 3500, weeklyRate: 20000, monthlyRate: 65000, securityDeposit: 50000 },
-      { category: 'Laptop', hourlyRate: 500, dailyRate: 2500, weeklyRate: 15000, monthlyRate: 50000, securityDeposit: 80000 }
+      { category: 'Cinema Cameras', hourlyRate: 500, dailyRate: 3500, weeklyRate: 19000, monthlyRate: 60000, securityDeposit: 50000 },
+      { category: 'Mirrorless Cameras', hourlyRate: 300, dailyRate: 1800, weeklyRate: 10000, monthlyRate: 32000, securityDeposit: 25000 },
+      { category: 'Camera Lenses', hourlyRate: 180, dailyRate: 900, weeklyRate: 5000, monthlyRate: 16000, securityDeposit: 15000 },
+      { category: 'Gimbals & Stabilizers', hourlyRate: 150, dailyRate: 800, weeklyRate: 4500, monthlyRate: 15000, securityDeposit: 12000 },
+      { category: 'Studio Audio & Mics', hourlyRate: 80, dailyRate: 400, weeklyRate: 2200, monthlyRate: 7500, securityDeposit: 8000 },
+      { category: 'Field Recorders', hourlyRate: 120, dailyRate: 600, weeklyRate: 3500, monthlyRate: 12000, securityDeposit: 10000 },
+      { category: 'Studio & Flash Lighting', hourlyRate: 200, dailyRate: 1200, weeklyRate: 7000, monthlyRate: 22000, securityDeposit: 20000 },
+      { category: 'Drones & Aerial', hourlyRate: 700, dailyRate: 3500, weeklyRate: 20000, monthlyRate: 65000, securityDeposit: 50000 },
+      { category: 'Laptops & Workstations', hourlyRate: 500, dailyRate: 2500, weeklyRate: 15000, monthlyRate: 50000, securityDeposit: 80000 },
+      { category: 'Monitors & Wireless Video', hourlyRate: 250, dailyRate: 1400, weeklyRate: 7800, monthlyRate: 25000, securityDeposit: 22000 },
+      { category: 'VR & Action Cameras', hourlyRate: 200, dailyRate: 1100, weeklyRate: 6000, monthlyRate: 20000, securityDeposit: 18000 },
+      { category: 'Tripods & Camera Support', hourlyRate: 100, dailyRate: 550, weeklyRate: 3000, monthlyRate: 10000, securityDeposit: 8000 },
+      { category: 'Power & Battery Stations', hourlyRate: 150, dailyRate: 800, weeklyRate: 4500, monthlyRate: 14000, securityDeposit: 12000 },
+      { category: 'Electric Mobility', hourlyRate: 350, dailyRate: 1800, weeklyRate: 10000, monthlyRate: 32000, securityDeposit: 35000 }
     ]);
     console.log(`🏷️  Created ${pricelists.length} pricelist tiers`);
 
-    const customer1 = createdUsers.find(u => u.email === 'alex@example.com');
-    const customer2 = createdUsers.find(u => u.email === 'priya@example.com');
-    const customer3 = createdUsers.find(u => u.email === 'rohan@example.com');
-    const admin = createdUsers.find(u => u.email === 'admin@rentiq.com');
-    const camera1 = createdProducts[0];
-    const camera2 = createdProducts[1];
-    const drone = createdProducts[5];
-    const now = new Date().toLocaleString();
-
-    // Seed customer addresses
-    await Address.create([
-      {
-        userId: customer1._id,
-        fullName: customer1.name,
-        phone: customer1.phone,
-        street: '42 Studio Heights, Indiranagar',
-        city: 'Bengaluru',
-        state: 'Karnataka',
-        zip: '560038',
+    // 4. Create Addresses for Customers
+    const addressDocs = customerUsers.map((cust, idx) => {
+      const raw = CUSTOMERS_RAW[idx];
+      return {
+        userId: cust._id,
+        fullName: cust.name,
+        phone: cust.phone,
+        street: raw.street,
+        city: raw.city,
+        state: raw.state,
+        zip: raw.zip,
         country: 'India',
         isDefault: true
-      },
-      {
-        userId: customer2._id,
-        fullName: customer2.name,
-        phone: customer2.phone,
-        street: '12, MG Road',
-        city: 'Bengaluru',
-        state: 'Karnataka',
-        zip: '560001',
-        country: 'India',
-        isDefault: true
-      }
-    ]);
-    console.log('📍 Created customer addresses');
+      };
+    });
+    await Address.insertMany(addressDocs);
+    console.log(`📍 Created customer delivery addresses`);
 
-    // Seed sample quotations & invoices
-    const quote1 = await Quotation.create({
-      quotationId: 'QTE-2026-1001',
-      userId: customer1._id,
-      productId: camera1._id,
-      customerName: customer1.name,
-      customerEmail: customer1.email,
-      customerPhone: customer1.phone,
-      productName: camera1.name,
-      startDate: '2026-08-10',
-      endDate: '2026-08-13',
-      rentalFee: 4500,
-      securityDeposit: 25000,
-      discount: 500,
-      totalAmount: 29000,
-      status: 'CONFIRMED',
-      createdBy: admin._id
+    // 5. Generate Rental Orders & Payments for Customers across 215+ Products
+    const rentalsToCreate = [];
+    const paymentsToCreate = [];
+    const quotationsToCreate = [];
+    const invoicesToCreate = [];
+
+    const customerStatsMap = {};
+    customerUsers.forEach(u => {
+      customerStatsMap[u._id.toString()] = { total: 0, active: 0 };
     });
 
-    await Invoice.create({
-      invoiceId: 'INV-2026-1001',
-      quotationId: quote1.quotationId,
-      userId: customer1._id,
-      customerName: customer1.name,
-      customerEmail: customer1.email,
-      rentalFee: 4500,
-      securityDeposit: 25000,
-      totalAmount: 29000,
-      paymentStatus: 'PAID'
-    });
-    console.log('📄 Created sample quotations and invoices');
+    const statusOptions = ['Active', 'Returned', 'Overdue', 'Active', 'Returned', 'Returned', 'Overdue', 'Cancelled'];
+    const deliveryMethods = ['Store Pickup', 'Ship to Address'];
+    const paymentMethods = ['Online Payment', 'Credit Card', 'UPI', 'Cash on Delivery', 'Net Banking'];
 
-    const rentals = await Rental.create([
-      {
-        rentalId: 'RNT-2026-8801',
-        userId: customer1._id,
-        productId: camera1._id,
-        productName: camera1.name,
-        customerName: customer1.name,
-        customerEmail: customer1.email,
-        startDate: '2026-08-03',
-        endDate: '2026-08-10',
-        dailyRate: 1500,
-        totalAmount: 10500,
-        securityDeposit: 25000,
-        deliveryMethod: 'Store Pickup',
-        status: 'Active',
-        depositStatus: 'HELD',
-        paymentStatus: 'PAID',
-        timeline: [
-          { step: 'Booked', date: '2026-08-03 10:00 AM', completed: true },
-          { step: 'Confirmed', date: '2026-08-03 10:05 AM', completed: true },
-          { step: 'Picked Up / Shipped', date: 'Ready for Store Pickup', completed: true },
-          { step: 'Active Rental', date: '2026-08-03', completed: true },
-          { step: 'Returned', date: null, completed: false },
-          { step: 'Deposit Settled', date: null, completed: false }
-        ]
-      },
-      {
-        rentalId: 'RNT-2026-8802',
-        userId: customer2._id,
-        productId: camera2._id,
-        productName: camera2.name,
-        customerName: customer2.name,
-        customerEmail: customer2.email,
-        startDate: '2026-07-28',
-        endDate: '2026-08-04',
-        dailyRate: 2000,
-        totalAmount: 14000,
-        securityDeposit: 35000,
-        deliveryMethod: 'Ship to Address',
-        deliveryAddress: '12, MG Road, Bengaluru',
-        status: 'Overdue',
-        depositStatus: 'HELD',
-        paymentStatus: 'PAID',
-        timeline: [
-          { step: 'Booked', date: '2026-07-28 09:00 AM', completed: true },
-          { step: 'Confirmed', date: '2026-07-28 09:10 AM', completed: true },
-          { step: 'Picked Up / Shipped', date: 'Processing Dispatch', completed: true },
-          { step: 'Active Rental', date: '2026-07-28', completed: true },
-          { step: 'Returned', date: null, completed: false },
-          { step: 'Deposit Settled', date: null, completed: false }
-        ]
-      },
-      {
-        rentalId: 'RNT-2026-8803',
-        userId: customer3._id,
-        productId: drone._id,
-        productName: drone.name,
-        customerName: customer3.name,
-        customerEmail: customer3.email,
-        startDate: '2026-07-25',
-        endDate: '2026-08-01',
-        dailyRate: 3500,
-        totalAmount: 24500,
-        securityDeposit: 50000,
-        deliveryMethod: 'Store Pickup',
-        status: 'Returned',
-        depositStatus: 'REFUNDED',
-        paymentStatus: 'PAID',
-        timeline: [
-          { step: 'Booked', date: '2026-07-25 11:00 AM', completed: true },
-          { step: 'Confirmed', date: '2026-07-25 11:05 AM', completed: true },
-          { step: 'Picked Up / Shipped', date: 'Ready for Store Pickup', completed: true },
-          { step: 'Active Rental', date: '2026-07-25', completed: true },
-          { step: 'Returned', date: '2026-08-01 02:00 PM', completed: true },
-          { step: 'Deposit Settled', date: '2026-08-01 02:30 PM', completed: true }
-        ],
-        inspectionReport: {
-          condition: 'Excellent',
-          damageNotes: 'No damage reported',
-          missingAccessories: [],
-          lateFee: 0,
-          deductionAmount: 0,
-          refundAmount: 50000,
-          inspectionDate: '2026-08-01 02:15 PM'
+    let rentalCounter = 8801;
+
+    customerUsers.forEach((customer, custIdx) => {
+      const numRentals = (custIdx === 0) ? 3 : (custIdx % 3 === 0) ? 2 : 1;
+
+      for (let r = 0; r < numRentals; r++) {
+        const pIndex = (custIdx * 7 + r * 13) % createdProducts.length;
+        const product = createdProducts[pIndex];
+        const rentalStatus = statusOptions[(custIdx * 2 + r) % statusOptions.length];
+
+        const days = 3 + ((custIdx + r) % 5);
+        const startDay = 1 + ((custIdx * 2 + r) % 20);
+        const startDateStr = `2026-08-${String(startDay).padStart(2, '0')}`;
+        const endDay = startDay + days;
+        const endDateStr = `2026-08-${String(Math.min(endDay, 30)).padStart(2, '0')}`;
+
+        const totalAmount = product.dailyPrice * days;
+        const securityDeposit = product.securityDeposit;
+        const deliveryMethod = deliveryMethods[(custIdx + r) % 2];
+        const rawAddr = CUSTOMERS_RAW[custIdx];
+        const deliveryAddress = deliveryMethod === 'Ship to Address'
+          ? `${rawAddr.street}, ${rawAddr.city}, ${rawAddr.state} ${rawAddr.zip}`
+          : '';
+        const payMethod = paymentMethods[(custIdx + r) % paymentMethods.length];
+
+        let depositStatus = 'HELD';
+        if (rentalStatus === 'Returned' || rentalStatus === 'Cancelled') depositStatus = 'REFUNDED';
+
+        const paymentStatus = rentalStatus === 'Cancelled' ? 'PENDING' : 'PAID';
+        const rentalId = `RNT-2026-${rentalCounter++}`;
+
+        const isCompleted = rentalStatus === 'Returned';
+        const timeline = [
+          { step: 'Booked', date: `${startDateStr} 09:30 AM`, completed: true },
+          { step: 'Confirmed', date: `${startDateStr} 09:35 AM`, completed: true },
+          { step: 'Picked Up / Shipped', date: `${startDateStr} 11:00 AM`, completed: true },
+          { step: 'Active Rental', date: startDateStr, completed: true },
+          { step: 'Returned', date: isCompleted ? `${endDateStr} 02:00 PM` : null, completed: isCompleted },
+          { step: 'Deposit Settled', date: isCompleted ? `${endDateStr} 02:30 PM` : null, completed: isCompleted }
+        ];
+
+        let inspectionReport = null;
+        if (rentalStatus === 'Returned') {
+          inspectionReport = {
+            condition: custIdx % 4 === 0 ? 'Good' : 'Excellent',
+            damageNotes: custIdx % 4 === 0 ? 'Minor cosmetic wear' : 'No damage reported',
+            missingAccessories: [],
+            lateFee: 0,
+            deductionAmount: 0,
+            refundAmount: securityDeposit,
+            inspectionDate: `${endDateStr} 02:15 PM`
+          };
+        }
+
+        rentalsToCreate.push({
+          rentalId,
+          userId: customer._id,
+          productId: product._id,
+          productName: product.name,
+          customerName: customer.name,
+          customerEmail: customer.email,
+          customerPhone: customer.phone,
+          startDate: startDateStr,
+          endDate: endDateStr,
+          dailyRate: product.dailyPrice,
+          totalAmount,
+          securityDeposit,
+          deliveryMethod,
+          deliveryAddress,
+          paymentMethod: payMethod,
+          status: rentalStatus,
+          depositStatus,
+          paymentStatus,
+          timeline,
+          inspectionReport
+        });
+
+        customerStatsMap[customer._id.toString()].total += 1;
+        if (rentalStatus === 'Active' || rentalStatus === 'Overdue') {
+          customerStatsMap[customer._id.toString()].active += 1;
+        }
+
+        // Payments
+        const txnFeeId = `TXN-9${rentalCounter}1`;
+        const txnHoldId = `TXN-9${rentalCounter}2`;
+
+        paymentsToCreate.push({
+          transactionId: txnFeeId,
+          customer: customer.name,
+          rentalId,
+          type: 'Rental Fee',
+          amount: totalAmount,
+          method: payMethod,
+          status: paymentStatus,
+          date: `${startDateStr} 09:35 AM`
+        });
+
+        if (paymentStatus === 'PAID') {
+          paymentsToCreate.push({
+            transactionId: txnHoldId,
+            customer: customer.name,
+            rentalId,
+            type: 'Deposit Hold',
+            amount: securityDeposit,
+            method: 'Escrow Lock',
+            status: depositStatus,
+            date: `${startDateStr} 09:35 AM`
+          });
+        }
+
+        if (rentalStatus === 'Returned') {
+          paymentsToCreate.push({
+            transactionId: `TXN-9${rentalCounter}3`,
+            customer: customer.name,
+            rentalId,
+            type: 'Deposit Refund',
+            amount: securityDeposit,
+            method: 'Direct Disburse',
+            status: 'REFUNDED',
+            date: `${endDateStr} 02:30 PM`
+          });
+        }
+
+        if (custIdx < 10 && r === 0) {
+          const qteId = `QTE-2026-10${custIdx + 1}`;
+          const invId = `INV-2026-10${custIdx + 1}`;
+
+          quotationsToCreate.push({
+            quotationId: qteId,
+            userId: customer._id,
+            productId: product._id,
+            customerName: customer.name,
+            customerEmail: customer.email,
+            customerPhone: customer.phone,
+            productName: product.name,
+            startDate: startDateStr,
+            endDate: endDateStr,
+            rentalFee: totalAmount,
+            securityDeposit,
+            discount: 0,
+            totalAmount: totalAmount + securityDeposit,
+            status: 'CONFIRMED',
+            createdBy: adminUser._id
+          });
+
+          invoicesToCreate.push({
+            invoiceId: invId,
+            quotationId: qteId,
+            rentalId,
+            userId: customer._id,
+            customerName: customer.name,
+            customerEmail: customer.email,
+            rentalFee: totalAmount,
+            securityDeposit,
+            totalAmount: totalAmount + securityDeposit,
+            paymentStatus: 'PAID',
+            issueDate: startDateStr
+          });
         }
       }
-    ]);
-    console.log(`📋 Created ${rentals.length} rentals`);
+    });
 
-    // Seed payments
-    await Payment.create([
-      { transactionId: 'TXN-9011', customer: 'Alex Johnson', rentalId: 'RNT-2026-8801', type: 'Rental Fee', amount: 10500, method: 'Online Payment', status: 'PAID', date: '2026-08-03 10:15 AM' },
-      { transactionId: 'TXN-9012', customer: 'Alex Johnson', rentalId: 'RNT-2026-8801', type: 'Deposit Hold', amount: 25000, method: 'Escrow Lock', status: 'HELD', date: '2026-08-03 10:15 AM' },
-      { transactionId: 'TXN-9013', customer: 'Priya Sharma', rentalId: 'RNT-2026-8802', type: 'Rental Fee', amount: 14000, method: 'Online Payment', status: 'PAID', date: '2026-07-28 09:15 AM' },
-      { transactionId: 'TXN-9014', customer: 'Priya Sharma', rentalId: 'RNT-2026-8802', type: 'Deposit Hold', amount: 35000, method: 'Escrow Lock', status: 'HELD', date: '2026-07-28 09:15 AM' },
-      { transactionId: 'TXN-9015', customer: 'Rohan Verma', rentalId: 'RNT-2026-8803', type: 'Rental Fee', amount: 24500, method: 'Online Payment', status: 'PAID', date: '2026-07-25 11:10 AM' },
-      { transactionId: 'TXN-9016', customer: 'Rohan Verma', rentalId: 'RNT-2026-8803', type: 'Deposit Refund', amount: 50000, method: 'Direct Disburse', status: 'REFUNDED', date: '2026-08-01 02:30 PM' }
-    ]);
-    console.log('💳 Created payment records');
+    const createdRentals = await Rental.insertMany(rentalsToCreate);
+    console.log(`📋 Created ${createdRentals.length} rental orders across 30 users`);
+
+    await Payment.insertMany(paymentsToCreate);
+    console.log(`💳 Created ${paymentsToCreate.length} payment records`);
+
+    await Quotation.insertMany(quotationsToCreate);
+    await Invoice.insertMany(invoicesToCreate);
+    console.log(`📄 Created sample quotations and invoices`);
+
+    // 5b. Update availableStock for each product based on active rentals
+    let zeroStockCount = 0;
+    for (const prod of createdProducts) {
+      const activeCount = rentalsToCreate.filter(r =>
+        r.productId.toString() === prod._id.toString() &&
+        (r.status === 'Active' || r.status === 'Overdue')
+      ).length;
+
+      const newAvailable = Math.max(0, prod.totalStock - activeCount);
+      if (newAvailable === 0) zeroStockCount++;
+      await Product.findByIdAndUpdate(prod._id, { availableStock: newAvailable });
+    }
+    console.log(`📦 Calculated fleet inventory: ${zeroStockCount} products fully distributed (availableStock = 0)`);
+
+    // 6. Update totalRentals and activeRentals on User documents
+    for (const cust of customerUsers) {
+      const stats = customerStatsMap[cust._id.toString()];
+      await User.findByIdAndUpdate(cust._id, {
+        totalRentals: stats.total,
+        activeRentals: stats.active
+      });
+    }
+    console.log(`🔄 Updated rental counters for all customer accounts`);
 
     console.log('\n🎉 Seed complete!');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('Admin   → admin@rentiq.com / admin123');
-    console.log('Customer → alex@example.com / customer123');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('Admin Account    → admin@rentiq.com / admin123');
+    console.log('Customer Accounts → alex@example.com, priya@example.com, ... (password: customer123)');
+    console.log(`Total Users      → ${createdUsers.length} (${customerUsers.length} Customers)`);
+    console.log(`Total Products   → ${createdProducts.length} Unique Gear Items`);
+    console.log(`Total Rentals    → ${createdRentals.length}`);
+    console.log(`Total Payments   → ${paymentsToCreate.length}`);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   } catch (err) {
     console.error('❌ Seed error:', err.message);
+    console.error(err.stack);
   } finally {
     await mongoose.disconnect();
     process.exit(0);
