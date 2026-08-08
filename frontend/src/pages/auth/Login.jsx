@@ -17,7 +17,7 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const from = location.state?.from?.pathname || '/';
+  const from = (typeof location.state?.from === 'string' ? location.state.from : location.state?.from?.pathname) || '/';
 
   const handleSubmit = async (e) => {
     e.preventDefault();

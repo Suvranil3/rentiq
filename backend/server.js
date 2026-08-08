@@ -28,6 +28,10 @@ app.use('/api/rentals', require('./routes/rentals'));
 app.use('/api/returns', require('./routes/returns'));
 app.use('/api/payments', require('./routes/payments'));
 app.use('/api/users', require('./routes/users'));
+app.use('/api/addresses', require('./routes/addresses'));
+app.use('/api/quotations', require('./routes/quotations'));
+app.use('/api/invoices', require('./routes/invoices'));
+app.use('/api/pricelists', require('./routes/pricelists'));
 
 // 404
 app.use((req, res) => {

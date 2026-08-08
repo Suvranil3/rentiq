@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
@@ -17,12 +17,15 @@ export const Register = () => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
 
+  const location = useLocation();
+  const from = (typeof location.state?.from === 'string' ? location.state.from : location.state?.from?.pathname) || '/';
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await register({ name, email, phone, password });
       addToast('Registration successful! Welcome to RentIQ.', 'success');
-      navigate('/');
+      navigate(from);
     } catch (err) {
       addToast(err.message || 'Registration failed. Please check inputs.', 'error');
     }

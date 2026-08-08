@@ -5,6 +5,10 @@ const User = require('../models/User');
 const Product = require('../models/Product');
 const Rental = require('../models/Rental');
 const Payment = require('../models/Payment');
+const Address = require('../models/Address');
+const Quotation = require('../models/Quotation');
+const Invoice = require('../models/Invoice');
+const Pricelist = require('../models/Pricelist');
 
 const PRODUCTS = [
   {
@@ -188,6 +192,10 @@ async function seed() {
     await Product.deleteMany({});
     await Rental.deleteMany({});
     await Payment.deleteMany({});
+    await Address.deleteMany({});
+    await Quotation.deleteMany({});
+    await Invoice.deleteMany({});
+    await Pricelist.deleteMany({});
     console.log('🗑️  Cleared existing data');
 
     // Seed users
@@ -198,14 +206,84 @@ async function seed() {
     const createdProducts = await Product.insertMany(PRODUCTS);
     console.log(`📦 Created ${createdProducts.length} products`);
 
-    // Seed sample rentals
+    // Seed pricelists
+    const pricelists = await Pricelist.insertMany([
+      { category: 'Camera', hourlyRate: 300, dailyRate: 1500, weeklyRate: 8500, monthlyRate: 28000, securityDeposit: 25000 },
+      { category: 'Stabilizer', hourlyRate: 150, dailyRate: 800, weeklyRate: 4500, monthlyRate: 15000, securityDeposit: 12000 },
+      { category: 'Audio', hourlyRate: 80, dailyRate: 400, weeklyRate: 2200, monthlyRate: 7500, securityDeposit: 8000 },
+      { category: 'Lighting', hourlyRate: 120, dailyRate: 600, weeklyRate: 3500, monthlyRate: 12000, securityDeposit: 10000 },
+      { category: 'Drone', hourlyRate: 700, dailyRate: 3500, weeklyRate: 20000, monthlyRate: 65000, securityDeposit: 50000 },
+      { category: 'Laptop', hourlyRate: 500, dailyRate: 2500, weeklyRate: 15000, monthlyRate: 50000, securityDeposit: 80000 }
+    ]);
+    console.log(`🏷️  Created ${pricelists.length} pricelist tiers`);
+
     const customer1 = createdUsers.find(u => u.email === 'alex@example.com');
     const customer2 = createdUsers.find(u => u.email === 'priya@example.com');
     const customer3 = createdUsers.find(u => u.email === 'rohan@example.com');
-    const camera1 = createdProducts[0]; // Sony A7 III
-    const camera2 = createdProducts[1]; // Canon EOS R5
-    const drone = createdProducts[5];   // DJI Mavic 3
+    const admin = createdUsers.find(u => u.email === 'admin@rentiq.com');
+    const camera1 = createdProducts[0];
+    const camera2 = createdProducts[1];
+    const drone = createdProducts[5];
     const now = new Date().toLocaleString();
+
+    // Seed customer addresses
+    await Address.create([
+      {
+        userId: customer1._id,
+        fullName: customer1.name,
+        phone: customer1.phone,
+        street: '42 Studio Heights, Indiranagar',
+        city: 'Bengaluru',
+        state: 'Karnataka',
+        zip: '560038',
+        country: 'India',
+        isDefault: true
+      },
+      {
+        userId: customer2._id,
+        fullName: customer2.name,
+        phone: customer2.phone,
+        street: '12, MG Road',
+        city: 'Bengaluru',
+        state: 'Karnataka',
+        zip: '560001',
+        country: 'India',
+        isDefault: true
+      }
+    ]);
+    console.log('📍 Created customer addresses');
+
+    // Seed sample quotations & invoices
+    const quote1 = await Quotation.create({
+      quotationId: 'QTE-2026-1001',
+      userId: customer1._id,
+      productId: camera1._id,
+      customerName: customer1.name,
+      customerEmail: customer1.email,
+      customerPhone: customer1.phone,
+      productName: camera1.name,
+      startDate: '2026-08-10',
+      endDate: '2026-08-13',
+      rentalFee: 4500,
+      securityDeposit: 25000,
+      discount: 500,
+      totalAmount: 29000,
+      status: 'CONFIRMED',
+      createdBy: admin._id
+    });
+
+    await Invoice.create({
+      invoiceId: 'INV-2026-1001',
+      quotationId: quote1.quotationId,
+      userId: customer1._id,
+      customerName: customer1.name,
+      customerEmail: customer1.email,
+      rentalFee: 4500,
+      securityDeposit: 25000,
+      totalAmount: 29000,
+      paymentStatus: 'PAID'
+    });
+    console.log('📄 Created sample quotations and invoices');
 
     const rentals = await Rental.create([
       {

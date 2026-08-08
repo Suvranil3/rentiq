@@ -10,7 +10,8 @@ import {
   Settings, 
   LogOut,
   ArrowLeft,
-  DollarSign
+  DollarSign,
+  FileText
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -29,8 +30,9 @@ export const AdminSidebar = () => {
       ]
     },
     {
-      title: "Rental Operations",
+      title: "Sales & Proposals",
       items: [
+        { label: "Quotations & Invoices", icon: FileText, path: "/admin/quotations" },
         { label: "All Rentals", icon: CalendarClock, path: "/admin/rentals" },
         { label: "Return Inspection", icon: RotateCcw, path: "/admin/returns" }
       ]
