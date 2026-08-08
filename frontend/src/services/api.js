@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Centralized Axios Instance with Base URL from Environment Variable
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 export const apiClient = axios.create({
   baseURL: API_URL,
