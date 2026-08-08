@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { RupeeIcon } from '../ui/RupeeIcon';
 import { 
   LayoutDashboard, 
   Package, 
@@ -10,7 +11,6 @@ import {
   Settings, 
   LogOut,
   ArrowLeft,
-  DollarSign,
   FileText
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -41,7 +41,7 @@ export const AdminSidebar = () => {
       title: "Inventory & Pricelists",
       items: [
         { label: "Products Catalog", icon: Package, path: "/admin/products" },
-        { label: "Pricelists", icon: DollarSign, path: "/admin/pricelists" }
+        { label: "Pricelists", icon: RupeeIcon, path: "/admin/pricelists" }
       ]
     },
     {

@@ -20,11 +20,11 @@ import {
   Pie, 
   Cell 
 } from 'recharts';
+import { RupeeIcon } from '../../components/ui/RupeeIcon';
 import { 
   CalendarClock, 
   RotateCcw, 
   AlertTriangle, 
-  DollarSign, 
   ShieldCheck, 
   TrendingUp, 
   Package,
@@ -303,7 +303,7 @@ export const Dashboard = () => {
             title="Total Rental Revenue"
             value={loading ? '...' : `₹${totalRevenue.toLocaleString()}`}
             subtext="Gross earnings from non-cancelled orders"
-            icon={DollarSign}
+            icon={RupeeIcon}
             accentColor="fresh-grass"
             trend={{ value: '+24%', positive: true }}
           />
@@ -333,7 +333,7 @@ export const Dashboard = () => {
             title="Deductions Collected"
             value={loading ? '...' : `₹${deductionsCollected.toLocaleString()}`}
             subtext="Late fees & damage deductions"
-            icon={DollarSign}
+            icon={RupeeIcon}
             accentColor="sunshine-pop"
           />
         </div>

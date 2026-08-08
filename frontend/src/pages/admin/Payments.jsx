@@ -5,7 +5,8 @@ import { Badge } from '../../components/ui/Badge';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { api } from '../../api/api';
-import { CreditCard, DollarSign, ShieldCheck, TrendingUp } from 'lucide-react';
+import { RupeeIcon } from '../../components/ui/RupeeIcon';
+import { CreditCard, ShieldCheck, TrendingUp } from 'lucide-react';
 
 export const AdminPayments = () => {
   const [payments, setPayments] = useState([]);

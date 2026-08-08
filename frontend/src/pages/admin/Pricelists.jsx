@@ -3,7 +3,8 @@ import { AdminSidebar } from '../../components/layout/AdminSidebar';
 import { Table } from '../../components/ui/Table';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { DollarSign, Tag, Clock } from 'lucide-react';
+import { RupeeIcon } from '../../components/ui/RupeeIcon';
+import { Tag, Clock } from 'lucide-react';
 
 export const AdminPricelists = () => {
   const pricelists = [

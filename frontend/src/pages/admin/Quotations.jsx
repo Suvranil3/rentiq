@@ -7,7 +7,8 @@ import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { api } from '../../api/api';
 import { useToast } from '../../context/ToastContext';
-import { FileText, Plus, CheckCircle2, XCircle, DollarSign, Calendar } from 'lucide-react';
+import { RupeeIcon } from '../../components/ui/RupeeIcon';
+import { FileText, Plus, CheckCircle2, XCircle, Calendar } from 'lucide-react';
 
 export const AdminQuotations = () => {
   const { addToast } = useToast();
