@@ -4,6 +4,72 @@ const Product = require('../models/Product');
 
 const defaultImg = 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80';
 
+const categoryImagePools = {
+  Cameras: [
+    'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1512790182412-b19e6d61b397?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1519638399535-1b036603ac77?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1581591524425-c7e0978865fc?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1508873696983-2df515122519?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&fit=crop&w=800&q=80'
+  ],
+  Lenses: [
+    'https://images.unsplash.com/photo-1617005082133-548c4dd27f35?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1563298723-dcfebaa392e3?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1520390138845-fd2d229dd553?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1554048612-b6a482bc67e5?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1512790182412-b19e6d61b397?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80'
+  ],
+  Drones: [
+    'https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1527977966376-1c8408f9f108?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1507582020474-9a35b7d455d9?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1533560904424-a0c61dc306fc?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1521405924368-64c5b84bec60?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80'
+  ],
+  Audio: [
+    'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1598653222000-6b7b7a552625?auto=format&fit=crop&w=800&q=80'
+  ],
+  Lighting: [
+    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?auto=format&fit=crop&w=800&q=80'
+  ],
+  Stabilizers: [
+    'https://images.unsplash.com/photo-1589256469067-ea99122bbdc4?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1512790182412-b19e6d61b397?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80'
+  ],
+  Production: [
+    'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80'
+  ]
+};
+
 const categoriesData = [
   {
     category: 'Cameras',
@@ -134,14 +200,18 @@ const categoriesData = [
   }
 ];
 
-function generate200Products() {
+function generate200ProductsWithVariedImages() {
   const products = [];
-  let idCounter = 1;
+  let idCounter = 0;
 
   categoriesData.forEach(cat => {
-    // Generate base items
-    cat.items.forEach(baseItem => {
+    const pool = categoryImagePools[cat.category] || categoryImagePools.Cameras;
+
+    // Generate base items with unique pool images
+    cat.items.forEach((baseItem, itemIdx) => {
       const brand = cat.brands[idCounter % cat.brands.length];
+      const assignedImage = pool[itemIdx % pool.length];
+
       products.push({
         name: baseItem.name,
         brand: brand,
@@ -154,26 +224,27 @@ function generate200Products() {
         totalStock: 3 + (idCounter % 5),
         availableStock: 3 + (idCounter % 5),
         status: 'Available',
-        images: [defaultImg],
+        images: [assignedImage],
         specifications: baseItem.spec
       });
       idCounter++;
     });
 
-    // Expand items with model variants to reach 200 total products
+    // Expand items with model variants and distinct image URLs
     const variants = ['Mark II', 'Pro Kit', 'V2 System', 'Studio Edition', 'Extreme', 'Ultra', 'Compact', 'Master Set'];
     for (let i = 1; i <= 25; i++) {
-      const baseName = cat.items[i % cat.items.length].name;
+      const baseItem = cat.items[i % cat.items.length];
       const variant = variants[i % variants.length];
       const brand = cat.brands[(idCounter + i) % cat.brands.length];
-      const basePrice = cat.items[i % cat.items.length].price + (i * 50);
-      const baseDeposit = cat.items[i % cat.items.length].deposit + (i * 500);
+      const basePrice = baseItem.price + (i * 50);
+      const baseDeposit = baseItem.deposit + (i * 500);
+      const assignedImage = pool[(i + itemIdxOffset(cat.category)) % pool.length];
 
       products.push({
-        name: `${baseName} ${variant} #${i}`,
+        name: `${baseItem.name} ${variant} #${i}`,
         brand: brand,
         category: cat.category,
-        description: `High performance ${baseName} ${variant} equipment package. Features enhanced durability, expanded battery life, and complete accessory mounting hardware.`,
+        description: `High performance ${baseItem.name} ${variant} equipment package. Features enhanced durability, expanded battery life, and complete accessory mounting hardware.`,
         dailyPrice: basePrice,
         weeklyPrice: Math.round(basePrice * 5.2),
         monthlyPrice: Math.round(basePrice * 18),
@@ -181,7 +252,7 @@ function generate200Products() {
         totalStock: 2 + (i % 4),
         availableStock: 2 + (i % 4),
         status: 'Available',
-        images: [defaultImg],
+        images: [assignedImage],
         specifications: {
           Format: 'Professional Grade',
           Variant: variant,
@@ -196,20 +267,24 @@ function generate200Products() {
   return products.slice(0, 200);
 }
 
+function itemIdxOffset(category) {
+  const map = { Cameras: 1, Lenses: 2, Drones: 3, Audio: 4, Lighting: 5, Stabilizers: 6, Production: 7 };
+  return map[category] || 0;
+}
+
 async function seed200() {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('✅ Connected to MongoDB Atlas');
 
-    const productsToInsert = generate200Products();
-    console.log(`📦 Generated ${productsToInsert.length} distinct product records.`);
+    const productsToInsert = generate200ProductsWithVariedImages();
+    console.log(`📦 Generated ${productsToInsert.length} distinct product records with varied image pools.`);
 
-    // Clear existing products and re-insert 200 products
     await Product.deleteMany({});
     console.log('🗑️  Cleared existing product catalog in MongoDB Atlas');
 
     const created = await Product.insertMany(productsToInsert);
-    console.log(`🎉 Successfully seeded ${created.length} products into MongoDB Atlas!`);
+    console.log(`🎉 Successfully seeded ${created.length} products with unique & varied photography into MongoDB Atlas!`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   } catch (err) {
     console.error('❌ Seeding error:', err);
