@@ -36,17 +36,13 @@ export const Login = () => {
     }
   };
 
-  const handleDemoLogin = async (role) => {
-    try {
-      const loggedUser = await loginAsDemoUser(role);
-      addToast(`Logged in as ${role === 'admin' ? 'Operations Admin' : 'Demo Customer'}`, 'success');
-      if (role === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        navigate(from);
-      }
-    } catch (err) {
-      addToast('Demo login failed', 'error');
+  const fillCredentials = (role) => {
+    if (role === 'admin') {
+      setEmail('admin@rentiq.com');
+      setPassword('admin123');
+    } else {
+      setEmail('alex@example.com');
+      setPassword('customer123');
     }
   };
 
@@ -67,27 +63,29 @@ export const Login = () => {
           </p>
         </div>
 
-        {/* Demo Switcher Highlight Card */}
+        {/* Credentials Preset Helper Card */}
         <div className="p-4 bg-sandstone/30 rounded-3xl border border-hairline-mist space-y-3">
           <span className="text-[11px] font-bold text-stone-gray uppercase tracking-wider block text-center">
-            ⚡ Quick 1-Click Demo Login
+            Fill Demo Credentials:
           </span>
           <div className="grid grid-cols-2 gap-3">
             <Button
               variant="outline"
               size="sm"
               icon={User}
-              onClick={() => handleDemoLogin('customer')}
+              type="button"
+              onClick={() => fillCredentials('customer')}
             >
-              Demo Customer
+              Customer Details
             </Button>
             <Button
-              variant="primary"
+              variant="outline"
               size="sm"
               icon={Shield}
-              onClick={() => handleDemoLogin('admin')}
+              type="button"
+              onClick={() => fillCredentials('admin')}
             >
-              Operations Admin
+              Admin Details
             </Button>
           </div>
         </div>

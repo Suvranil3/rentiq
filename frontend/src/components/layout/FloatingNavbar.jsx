@@ -54,27 +54,6 @@ export const FloatingNavbar = () => {
 
         {/* Right Actions */}
         <div className="hidden md:flex items-center gap-3">
-          {/* Demo Role Quick Switcher */}
-          <div className="flex items-center bg-sandstone/30 rounded-full p-1 border border-hairline-mist text-xs">
-            <button
-              onClick={() => loginAsDemoUser('customer')}
-              className={`px-3 py-1 rounded-full font-semibold transition-colors ${
-                !isAdmin ? 'bg-pure-white text-ink-black shadow-xs' : 'text-stone-gray hover:text-ink-black'
-              }`}
-            >
-              Customer Mode
-            </button>
-            <button
-              onClick={() => loginAsDemoUser('admin')}
-              className={`px-3 py-1 rounded-full font-semibold transition-colors flex items-center gap-1 ${
-                isAdmin ? 'bg-ink-black text-fresh-grass shadow-xs' : 'text-stone-gray hover:text-ink-black'
-              }`}
-            >
-              <Shield className="w-3 h-3" />
-              Admin
-            </button>
-          </div>
-
           {/* Cart Icon */}
           <Link
             to="/cart"
@@ -144,23 +123,6 @@ export const FloatingNavbar = () => {
           </div>
 
           <div className="pt-3 border-t border-hairline-mist flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-stone-gray uppercase">Demo Mode</span>
-              <div className="flex gap-1">
-                <button
-                  onClick={() => { loginAsDemoUser('customer'); setMobileMenuOpen(false); }}
-                  className="px-3 py-1 bg-sandstone/40 text-ink-black rounded-full text-xs font-semibold"
-                >
-                  Customer
-                </button>
-                <button
-                  onClick={() => { loginAsDemoUser('admin'); setMobileMenuOpen(false); }}
-                  className="px-3 py-1 bg-ink-black text-fresh-grass rounded-full text-xs font-semibold"
-                >
-                  Admin
-                </button>
-              </div>
-            </div>
 
             <Link
               to="/cart"
