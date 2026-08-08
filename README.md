@@ -39,7 +39,7 @@ rentiq/
     ├── config/                # Database connection configuration
     ├── models/                # Mongoose Schema Definitions (User, Product, Rental, Payment)
     ├── routes/                # REST endpoints
-    ├── scripts/               # Seed scripts for MongoDB Atlas (productData.js & seed.js)
+    ├── scripts/               # Seed & Admin scripts (seed.js, productData.js, createAdmin.js)
     └── utils/                 # Shared store fallbacks & helper utilities
 ```
 
@@ -106,3 +106,36 @@ Open your browser at **[http://localhost:3000](http://localhost:3000)**.
 | **Demo Customer 2** | `priya@example.com` | `customer123` |
 | **Demo Customer 3** | `rohan@example.com` | `customer123` |
 | *(30 Customers Total)* | `user@example.com` | `customer123` |
+
+---
+
+## 🛡️ Creating & Assigning Admin Accounts
+
+RentIQ provides three flexible methods to create and assign Admin role access:
+
+### Method 1: Terminal / CLI Command (Command Line)
+Execute the `create-admin` command inside the `backend/` directory:
+
+```bash
+cd backend
+npm run create-admin -- --name "Operations Lead" --email "admin@example.com" --password "adminpass123"
+```
+
+*Note: If an account with the provided email already exists as a customer, this CLI command automatically **promotes** the existing user to `admin` role in MongoDB Atlas.*
+
+---
+
+### Method 2: Web Admin Portal UI
+1. Log in to the application as an existing Admin (`admin@rentiq.com` / `admin123`).
+2. Navigate to **Admin Navigation → User Administration** (`/admin/users`).
+3. Click the **`+ Add Admin Account`** button at the top right.
+4. Fill in the Name, Email, and Password in the modal form and click **Create Admin Account**.
+5. Alternatively, click the **Make Admin** button next to any registered customer in the user table to instantly elevate their role to Admin.
+
+---
+
+### Method 3: Automated Database Seeding
+Running `npm run seed` inside `backend/` automatically seeds the default administrator account:
+- **Email**: `admin@rentiq.com`
+- **Password**: `admin123`
+- **Role**: `admin`
